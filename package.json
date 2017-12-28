@@ -5,7 +5,7 @@
   "author": "Lison<zhigang.li@tendcloud.com>",
   "license": "MIT",
   "scripts": {
-    "dev": "cross-env NODE_ENV=development webpack-dev-server --open --hot",
+    "dev": "cross-env NODE_ENV=develop webpack-dev-server --content-base ./ --open --inline --hot --compress --config build/webpack.config.js",
     "build": "cross-env NODE_ENV=production webpack --progress --hide-modules",
     "dist": "cross-env NODE_ENV=production webpack --progress --hide-modules"
   },

@@ -1,0 +1,52 @@
+@prefix: ~"vue-bigdata-table";
+
+.@{prefix}{
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    &:nth-child(2){
+        border-top: 1px solid #e9eaec;
+    }
+    &:nth-child(4){
+        border-bottom: 1px solid #e9eaec;
+    }
+    &-data-table{
+        width: 100%;
+        border: 1px solid #e9eaec;
+        border-bottom: none;
+        border-top: none;
+        tr{
+            &:last-child{
+                border-right: none;
+            }
+            td{
+                min-width: 0;
+                height: 48px;
+                box-sizing: border-box;
+                text-overflow: ellipsis;
+                vertical-align: middle;
+                border-bottom: 1px solid #e9eaec;
+                border-right: 1px solid #e9eaec;
+                background: #fff;
+                .@{prefix}-cell{
+                    box-sizing: border-box;
+                    padding: 0 18px;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: normal;
+                    word-break: break-all;
+                }
+            }
+            
+        }
+    }
+}
+.table1 td{
+    background: #FFAA51 !important;
+}
+.table2 td{
+    background: yellowgreen !important;
+}
+.table3 td{
+    background: #A0CDFF !important;
+}
