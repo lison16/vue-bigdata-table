@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <bigdata-table v-model="tableData"></bigdata-table>
+    <bigdata-table fixed v-model="tableData" :columns="columns"></bigdata-table>
   </div>
 </template>
 
@@ -13,7 +13,8 @@ export default {
   },
   data () {
     return {
-      tableData: []
+      tableData: [],
+      columns: []
     };
   },
   mounted () {
@@ -22,10 +23,29 @@ export default {
       dataArr.push({
         id: i,
         value: i + '00',
-        count: 'count' + i
+        count: 'count' + i,
+        name: 'namenasdfsdfsdfsdfssdfsdfsdsdfsdfsdfsf' + i
       });
     }
     this.tableData = dataArr;
+    this.columns = [
+      {
+        title: 'id',
+        key: 'id'
+      },
+      {
+        title: 'value',
+        key: 'value'
+      },
+      {
+        title: 'count',
+        key: 'count'
+      },
+      {
+        title: 'name',
+        key: 'name'
+      }
+    ];
   }
 }
 </script>

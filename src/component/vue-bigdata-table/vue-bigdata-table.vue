@@ -3,16 +3,22 @@
 </style>
 
 <template>
-    <div 
-        :class="wraperClasses"
-        ref="dataTable"
-        @scroll="handleScroll">
-        <!-- <table cellspacing="0" cellpadding="0" border="0">
-            
-        </table> -->
-        <div :style="{height: `${topPlaceholderHeight}px`}"></div>
-        <render-dom :render="renderTable"></render-dom>
-        <div :style="{height: `${bottomPlaceholderHeight}px`}"></div>
+    <div :class="wraperClasses">
+        <div
+            :class="dataWraperClasses"
+            ref="outWraper"
+            @scroll="handleScroll">
+            <div :class="headerWraperClasses">
+                <table ref="headerTable" cellspacing="0" cellpadding="0" border="0">
+                    <tr>
+                        <th :width="getCellWidth(col.title)" v-for="(col, i) in columns" :key="`table-title-${i}`">{{ col.title }}</th>
+                    </tr>
+                </table>
+            </div>
+            <div :style="{height: `${topPlaceholderHeight}px`}"></div>
+            <render-dom :render="renderTable"></render-dom>
+            <div :style="{height: `${bottomPlaceholderHeight}px`}"></div>
+        </div>
     </div>
 </template>
 <script>
@@ -27,7 +33,14 @@ export default {
         value: {
             type: Array
         },
-        rowHeight: Number
+        rowHeight: Number,
+        fixed: {
+            type: Boolean,
+            default: false
+        },
+        columns: {
+            type: Array
+        }
     },
     data () {
         return {
@@ -41,14 +54,27 @@ export default {
             moduleHeight: 0, // 三个tr块中的一块的高度
             topPlaceholderHeight: 0, // 顶部占位容器高度
             mark: 0, // 用于保存滚动距离来计算滚动方向
-            direction: 0 // 滚动方向 1 is down, 0 is up
+            direction: 0, // 滚动方向 1 is down, 0 is up
+            tableWidth: 0,
+            initCellWidth: 0
         };
     },
     computed: {
         wraperClasses () {
             return [
-                this.prefix
+                this.prefix,
+                this.fixed ? `${this.prefix}-fixed` : ''
             ];
+        },
+        headerWraperClasses () {
+            return [
+                `${this.prefix}-header-wraper`
+            ]
+        },
+        dataWraperClasses () {
+            return [
+                `${this.prefix}-wraper`
+            ]
         },
         dataTableClasses () {
             return [
@@ -88,8 +114,13 @@ export default {
         getDomHeight (ele) {
             return ele.offsetHeight;
         },
+        getDomWidth (ele) {
+            return ele.offsetWidth;
+        },
         updateHeight () {
-            let wraperHeight = this.getDomHeight(this.$refs.dataTable);
+            let wraperHeight = this.getDomHeight(this.$refs.outWraper);
+            this.tableWidth = this.getDomWidth(this.$refs.headerTable);
+            this.initCellWidth = this.tableWidth / this.columns.length;
             this.itemNum = Math.ceil(wraperHeight / this.itemRowHeight) + 10;
             this.moduleHeight = this.itemNum * this.itemRowHeight;
         },
@@ -97,7 +128,8 @@ export default {
             return h(ItemTable, {
                 props: {
                     itemData: data,
-                    rowStyles: this.rowStyles
+                    rowStyles: this.rowStyles,
+                    columns: this.columns
                 },
                 key: 'table-item-key' + index,
                 ref: 'itemTable' + index
@@ -142,6 +174,15 @@ export default {
             }
             this.scrollTop = scrollTop;
             this.mark = scrollTop;
+        },
+        getCellWidth (col) {
+            if (col.width === undefined) {
+                return this.tableWidth / this.columns.length;
+            }
+            // this.$nextTick(() => {
+            //     console.log(this.$refs.headerTable.$el)
+            //     return this.$refs.headerTable.$el;
+            // });
         }
     },
     mounted () {
