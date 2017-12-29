@@ -9,9 +9,12 @@
             ref="outWraper"
             @scroll="handleScroll">
             <div :class="headerWraperClasses">
-                <table ref="headerTable" cellspacing="0" cellpadding="0" border="0">
+                <table ref="headerTable" cellspacing="0" cellpadding="0" border="0" width="100%">
+                    <colgroup>
+                        <col :width="width" v-for="(width, i) in cellWidthArr" :key="'header-key-' + i"></col>
+                    </colgroup>
                     <tr>
-                        <th :width="getCellWidth(col.title)" v-for="(col, i) in columns" :key="`table-title-${i}`">{{ col.title }}</th>
+                        <th v-for="(col, i) in columns" :key="`table-title-${i}`">{{ col.title }}</th>
                     </tr>
                 </table>
             </div>
@@ -56,7 +59,7 @@ export default {
             mark: 0, // 用于保存滚动距离来计算滚动方向
             direction: 0, // 滚动方向 1 is down, 0 is up
             tableWidth: 0,
-            initCellWidth: 0
+            // initCellWidth: 0,
         };
     },
     computed: {
@@ -108,6 +111,33 @@ export default {
         },
         bottomPlaceholderHeight () {
             return (this.placeholderHeight - this.topPlaceholderHeight) < 0 ? 0 : this.placeholderHeight - this.topPlaceholderHeight;
+        },
+        cellWidthArr () {
+            let len = this.columns.length;
+            let i = 0;
+            let cellWidthArr = [];
+            let hasWidthCellCount = 0; // 统计设置了width的列的数量，从而为没有设置width的列分配宽度
+            let noWidthCellIndexArr = []; // 没有设置宽度的列的序列
+            let hasWidthCellTotalWidth = 0; // 设置了width的列一共多宽
+            while (i < len) {
+                if (this.columns[i].width) {
+                    hasWidthCellCount++;
+                    hasWidthCellTotalWidth += this.columns[i].width;
+                    cellWidthArr.push(this.columns[i].width);
+                } else {
+                    noWidthCellIndexArr.push(i);
+                    cellWidthArr.push(0);
+                }
+                i++;
+            }
+            let noWidthCellWidth = (this.tableWidth - hasWidthCellTotalWidth) / (len - hasWidthCellCount);
+            let w = 0;
+            let indexArrLen = noWidthCellIndexArr.length;
+            while (w < indexArrLen) {
+                cellWidthArr[w] = noWidthCellWidth;
+                w++;
+            }
+            return cellWidthArr;
         }
     },
     methods: {
@@ -120,16 +150,23 @@ export default {
         updateHeight () {
             let wraperHeight = this.getDomHeight(this.$refs.outWraper);
             this.tableWidth = this.getDomWidth(this.$refs.headerTable);
-            this.initCellWidth = this.tableWidth / this.columns.length;
+            // this.initCellWidth = this.tableWidth / this.columns.length;
             this.itemNum = Math.ceil(wraperHeight / this.itemRowHeight) + 10;
             this.moduleHeight = this.itemNum * this.itemRowHeight;
+        },
+        initCellWidth () {
+            this.columns.forEach(cell => {
+                if (cell.width) {
+                    this.cellWidthArr.push(cell.width)
+                }
+            })
         },
         getItemTable (h, data, index) {
             return h(ItemTable, {
                 props: {
                     itemData: data,
                     rowStyles: this.rowStyles,
-                    columns: this.columns
+                    widthArr: this.cellWidthArr
                 },
                 key: 'table-item-key' + index,
                 ref: 'itemTable' + index
@@ -174,15 +211,6 @@ export default {
             }
             this.scrollTop = scrollTop;
             this.mark = scrollTop;
-        },
-        getCellWidth (col) {
-            if (col.width === undefined) {
-                return this.tableWidth / this.columns.length;
-            }
-            // this.$nextTick(() => {
-            //     console.log(this.$refs.headerTable.$el)
-            //     return this.$refs.headerTable.$el;
-            // });
         }
     },
     mounted () {

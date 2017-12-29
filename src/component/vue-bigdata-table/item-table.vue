@@ -1,7 +1,7 @@
 <template>
-    <table ref="itemTable" :class="dataTableClasses" cellspacing="0" cellpadding="0" border="0">
+    <table ref="itemTable" :class="dataTableClasses" cellspacing="0" cellpadding="0" border="0" width="100%">
         <colgroup>
-            <col :width="getCellWidth(col)" v-for="(col, colIndex) in columns" :key="'colgroup-' + colIndex">
+            <col :width="width" v-for="(width, i) in widthArr" :key="'colgroup-' + i">
         </colgroup>
         <tbody>
             <tr v-for="(tr, index) in itemData" :key="index">
@@ -24,7 +24,7 @@ export default {
     props: {
         itemData: Array,
         rowStyles: Object,
-        columns: Array
+        widthArr: Array
     },
     computed: {
         dataTableClasses () {

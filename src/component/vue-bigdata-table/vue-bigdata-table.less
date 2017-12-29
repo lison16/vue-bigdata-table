@@ -7,21 +7,21 @@
     overflow: hidden;
     position: relative;
     &-wraper{
-        box-sizing: border-box;
         width: 100%;
         height: 100%;
         overflow: auto;
-        border: 1px solid #e9eaec;
         border-bottom: none;
 
         .@{prefix}-header-wraper{
             height: 52px;
+            box-sizing: border-box;
+            border: 1px solid #e9eaec;
             table{
-                // border: 1px solid #e9eaec;
-                width: 100%;
+                table-layout: fixed;
                 height: 100%;
                 tr th{
                     border-right: 1px solid #e9eaec;
+                    background: #fff;
                     &:last-child{
                         border-right: none;
                     }
@@ -36,11 +36,11 @@
             border-bottom: 1px solid #e9eaec;
         }
         .@{prefix}-data-table{
-            width: 100%;
-            // border: 1px solid #e9eaec;
-            // border-right: 1px solid #e9eaec;
+            border: 1px solid #e9eaec;
+            border-right: 1px solid #e9eaec;
             border-bottom: none;
             border-top: none;
+            table-layout: fixed;
             tr{
                 td{
                     min-width: 0;
@@ -69,20 +69,19 @@
 
     &-fixed{
         .@{prefix}-wraper{
-            margin-top: 50px;
-            height: ~"calc(100% - 50px)";
+            margin-top: 52px;
+            height: ~"calc(100% - 52px)";
         }
         .@{prefix}-header-wraper{
             position: absolute;
             top: 0;
             left: 0;
-            width: 100%;
+            // width: 100%;
             box-sizing: border-box;
             border: 1px solid #e9eaec;
             table{
-                // border: 1px solid #e9eaec;
-                width: 100%;
-                height: 100%;
+                // width: 100%;
+                // height: 100%;
                 tr th{
                     border-right: 1px solid #e9eaec;
                     background: #fff;
