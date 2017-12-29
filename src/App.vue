@@ -1,6 +1,8 @@
 <template>
   <div id="app">
-    <bigdata-table fixed v-model="tableData" :columns="columns"></bigdata-table>
+    <div class="wraper">
+      <bigdata-table fixed v-model="tableData" :columns="columns"></bigdata-table>
+    </div>
   </div>
 </template>
 
@@ -54,26 +56,27 @@ export default {
 <style>
 #app {
   position: absolute;
-  top: 100px;
+  top: 0px;
   right: 100px;
   bottom: 100px;
   left: 100px;
 }
-
+.wraper{
+  margin: 100px 100px;
+  width: 1000px;
+  height: 700px;
+}
 h1, h2 {
   font-weight: normal;
 }
-
 ul {
   list-style-type: none;
   padding: 0;
 }
-
 li {
   display: inline-block;
   margin: 0 10px;
 }
-
 a {
   color: #42b983;
 }

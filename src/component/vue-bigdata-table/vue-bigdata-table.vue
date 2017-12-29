@@ -132,12 +132,10 @@ export default {
             let noWidthCellWidth = (this.tableWidth - hasWidthCellTotalWidth) / (len - hasWidthCellCount);
             let w = 0;
             let indexArrLen = noWidthCellIndexArr.length;
-            console.log(cellWidthArr)
             while (w < indexArrLen) {
                 cellWidthArr[noWidthCellIndexArr[w]] = noWidthCellWidth;
                 w++;
             }
-            console.log(cellWidthArr)
             return cellWidthArr;
         }
     },
