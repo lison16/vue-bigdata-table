@@ -58,8 +58,7 @@ export default {
             topPlaceholderHeight: 0, // 顶部占位容器高度
             mark: 0, // 用于保存滚动距离来计算滚动方向
             direction: 0, // 滚动方向 1 is down, 0 is up
-            tableWidth: 0,
-            // initCellWidth: 0,
+            tableWidth: 0
         };
     },
     computed: {
@@ -154,13 +153,6 @@ export default {
             this.tableWidth = this.getDomWidth(this.$refs.headerTable);
             this.itemNum = Math.ceil(wraperHeight / this.itemRowHeight) + 10;
             this.moduleHeight = this.itemNum * this.itemRowHeight;
-        },
-        initCellWidth () {
-            this.columns.forEach(cell => {
-                if (cell.width) {
-                    this.cellWidthArr.push(cell.width)
-                }
-            })
         },
         getItemTable (h, data, index) {
             return h(ItemTable, {
