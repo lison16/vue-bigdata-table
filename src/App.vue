@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <div class="wraper">
-      <bigdata-table :cell-width="200" :header-height="100" fixed v-model="tableData" :columns="columns"></bigdata-table>
+      <bigdata-table :cell-width="100" :header-height="100" fixed v-model="tableData" :columns="columns"></bigdata-table>
     </div>
   </div>
 </template>
