@@ -3,24 +3,36 @@
 </style>
 
 <template>
-    <div :class="wraperClasses">
-        <div
-            :class="dataWraperClasses"
-            ref="outWraper"
-            @scroll="handleScroll">
-            <div :class="headerWraperClasses">
-                <table ref="headerTable" cellspacing="0" cellpadding="0" border="0" width="100%">
-                    <colgroup>
-                        <col :width="width" v-for="(width, i) in cellWidthArr" :key="'header-key-' + i"></col>
-                    </colgroup>
-                    <tr>
-                        <th v-for="(col, i) in columns" :key="`table-title-${i}`">{{ col.title }}</th>
-                    </tr>
-                </table>
+    <div :class="outerClasses">
+        <div :class="wraperClasses" :style="tableWidthStyles">
+            <div
+                :class="dataWraperClasses"
+                ref="outWraper"
+                @scroll="handleScroll">
+                <div :class="headerWraperClasses">
+                    <table ref="headerTable" cellspacing="0" cellpadding="0" border="0" width="100%">
+                        <colgroup>
+                            <col :width="width" v-for="(width, i) in cellWidthArr" :key="'header-key-' + i"></col>
+                        </colgroup>
+                        <tr 
+                            :style="{cursor: cursorOnHeader}" 
+                            @mousemove.capture.prevent="handleMousemove"
+                            @mousedown="handleMousedown"
+                            @mouseup="canNotMove"
+                            @mouseleave="canNotMove">
+                            <th v-for="(col, i) in columns" :data-index="i" :key="`table-title-${i}`">
+                                <!-- <div :class="headerThInsideWraper"> -->
+                                    <span v-if="!col.render">{{ col.title }}</span>
+                                    <render-dom v-else :render="col.render"></render-dom>
+                                <!-- </div> -->
+                            </th>
+                        </tr>
+                    </table>
+                </div>
+                <div :style="{height: `${topPlaceholderHeight}px`}"></div>
+                <render-dom :render="renderTable"></render-dom>
+                <div :style="{height: `${bottomPlaceholderHeight}px`}"></div>
             </div>
-            <div :style="{height: `${topPlaceholderHeight}px`}"></div>
-            <render-dom :render="renderTable"></render-dom>
-            <div :style="{height: `${bottomPlaceholderHeight}px`}"></div>
         </div>
     </div>
 </template>
@@ -43,6 +55,10 @@ export default {
         },
         columns: {
             type: Array
+        },
+        cellWidth: {
+            type: Number,
+            default: 100
         }
     },
     data () {
@@ -58,10 +74,22 @@ export default {
             topPlaceholderHeight: 0, // 顶部占位容器高度
             mark: 0, // 用于保存滚动距离来计算滚动方向
             direction: 0, // 滚动方向 1 is down, 0 is up
-            tableWidth: 0
+            tableWidth: 0,
+            widthArr: [], // 用于给数据表格传递列宽
+            /**
+             * 鼠标拖动调整列宽相关变量
+             */
+            isOnCellEdge: false, // 鼠标是否在表头的两个单元格之间的边框上
+            canMove: false,
+            initCellX: 0, // 用于计算鼠标移动的距离
         };
     },
     computed: {
+        outerClasses () {
+            return [
+                `${this.prefix}-outer`
+            ];
+        },
         wraperClasses () {
             return [
                 this.prefix,
@@ -82,6 +110,17 @@ export default {
             return [
                 `${this.prefix}-data-table`
             ];
+        },
+        headerThInsideWraper () {
+            return [
+                `${this.prefix}-header-inside-wraper`
+            ];
+        },
+        cellNum () { // 表格列数
+            return this.columns.length;
+        },
+        tableWidthStyles () {
+            return this.tableWidth ? {width: this.tableWidth + 'px'} : '100%';
         },
         table1Data () {
             let count = this.times0 * this.itemNum * 3;
@@ -112,7 +151,7 @@ export default {
             return (this.placeholderHeight - this.topPlaceholderHeight) < 0 ? 0 : this.placeholderHeight - this.topPlaceholderHeight;
         },
         cellWidthArr () {
-            let len = this.columns.length;
+            let len = this.cellNum;
             let i = 0;
             let cellWidthArr = [];
             let hasWidthCellCount = 0; // 统计设置了width的列的数量，从而为没有设置width的列分配宽度
@@ -136,7 +175,11 @@ export default {
                 cellWidthArr[noWidthCellIndexArr[w]] = noWidthCellWidth;
                 w++;
             }
+            this.widthArr = cellWidthArr;
             return cellWidthArr;
+        },
+        cursorOnHeader () {
+            return this.isOnCellEdge ? 'col-resize' : 'default';
         }
     },
     methods: {
@@ -148,7 +191,7 @@ export default {
         },
         updateHeight () {
             let wraperHeight = this.getDomHeight(this.$refs.outWraper);
-            this.tableWidth = this.getDomWidth(this.$refs.headerTable);
+            // this.tableWidth = this.getDomWidth(this.$refs.headerTable);
             this.itemNum = Math.ceil(wraperHeight / this.itemRowHeight) + 10;
             this.moduleHeight = this.itemNum * this.itemRowHeight;
         },
@@ -157,7 +200,7 @@ export default {
                 props: {
                     itemData: data,
                     rowStyles: this.rowStyles,
-                    widthArr: this.cellWidthArr
+                    widthArr: this.widthArr
                 },
                 key: 'table-item-key' + index,
                 ref: 'itemTable' + index
@@ -202,6 +245,59 @@ export default {
             }
             this.scrollTop = scrollTop;
             this.mark = scrollTop;
+        },
+        handleMousemove (e) {
+            let parentRow = e.currentTarget;
+            let cell = e.srcElement;
+            let cellDomrect = cell.getBoundingClientRect();
+            let atLeft = (e.pageX - cellDomrect.left) < (cellDomrect.width / 2);
+            let cellIndex = parseInt(cell.getAttribute('data-index')); // 当前单元格的序号
+            if (atLeft && cellIndex !== 0) {
+                if ((e.pageX - cellDomrect.left) <= 1) {
+                    this.isOnCellEdge = true;
+                } else {
+                    this.isOnCellEdge = false;
+                }
+            } else if (!atLeft && cellIndex !== this.cellNum - 1) {
+                if ((cellDomrect.right - e.pageX) <= 1) {
+                    this.isOnCellEdge = true;
+                } else {
+                    this.isOnCellEdge = false;
+                }
+            }
+            let index = 0; // 调整表格列宽的左侧的表格的序列
+            if (this.canMove) {
+                if (atLeft) {
+                    index = cellIndex - 1;
+                } else {
+                    index = cellIndex;
+                }
+                let widthLeft = this.widthArr[index] + e.pageX - this.initCellX;
+                let widthRight = this.widthArr[index + 1] + this.initCellX - e.pageX;
+                this.widthArr.splice(index, 2, widthLeft, widthRight);
+                this.initCellX = e.pageX;
+            }
+            console.log(123123)
+        },
+        handleMousedown (e) {
+            if (this.isOnCellEdge) {
+                this.canMove = true;
+                this.initCellX = e.pageX;
+            }
+        },
+        canNotMove () {
+            this.canMove = false;
+        }
+    },
+    watch: {
+        columns () {
+            this.$nextTick(() => {
+                console.log(this.cellWidth)
+                console.log(this.cellNum)
+                console.log(this.getDomWidth(this.$refs.headerTable))
+                this.tableWidth = this.cellWidth * this.columns.length > this.getDomWidth(this.$refs.headerTable) ? this.cellWidth * this.columns.length : false;
+                this.widthArr = this.cellWidthArr;
+            });
         }
     },
     mounted () {

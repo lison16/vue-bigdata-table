@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <div class="wraper">
-      <bigdata-table fixed v-model="tableData" :columns="columns"></bigdata-table>
+      <bigdata-table :cell-width="200" fixed v-model="tableData" :columns="columns"></bigdata-table>
     </div>
   </div>
 </template>
@@ -26,7 +26,13 @@ export default {
         id: i,
         value: i + '00',
         count: 'count' + i,
-        name: 'namenasdfsdfsdfsdfssdfsdfsdsdfsdfsdfsf' + i
+        name: 'namenasdfsdfsdfsdfssdfsdfsdsdfsdfsdfsf' + i,
+        sd: 'namenasdfsdfsdfsdfssdfsdfsdsdfsdfsf' + i,
+        sdd: 'namenasdfsdfsdfsdfssdfsdfsdsdfsdfsdfsf' + i,
+        sds: 'namenasdfsdfsdfsdfssdfsdfsdsdfsdfsf' + i,
+        sdds: 'namenasdfsdfsdfsdfssdfsdfsdsdfsdfsdfsf' + i,
+        sdsss: 'namenasdfsdfsdfsdfssdfsdfsdsdfsdfsf' + i,
+        sddsss: 'namenasdfsdfsdfsdfssdfsdfsdsdfsdfsdfsf' + i
       });
     }
     this.tableData = dataArr;
@@ -38,7 +44,20 @@ export default {
       },
       {
         title: 'value',
-        key: 'value'
+        key: 'value',
+        render: (h, params) => {
+          return h('button', {
+            style: {
+              width: '100%',
+              height: '50px'
+            },
+            on: {
+              click () {
+                console.log(params)
+              }
+            }
+          }, 'haha')
+        }
       },
       {
         title: 'count',
@@ -47,6 +66,30 @@ export default {
       {
         title: 'name',
         key: 'name'
+      },
+      {
+        title: 'count',
+        key: 'sd'
+      },
+      {
+        title: 'name',
+        key: 'sdd'
+      },
+      {
+        title: 'count',
+        key: 'sds'
+      },
+      {
+        title: 'name',
+        key: 'sdds'
+      },
+      {
+        title: 'count',
+        key: 'sdsss'
+      },
+      {
+        title: 'name',
+        key: 'sddsss'
       }
     ];
   }
@@ -65,6 +108,7 @@ export default {
   margin: 100px 100px;
   width: 1000px;
   height: 700px;
+  overflow: auto;
 }
 h1, h2 {
   font-weight: normal;
