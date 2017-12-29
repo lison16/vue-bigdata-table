@@ -8,8 +8,9 @@
             <div
                 :class="dataWraperClasses"
                 ref="outWraper"
-                @scroll="handleScroll">
-                <div :class="headerWraperClasses">
+                @scroll="handleScroll"
+                :style="marginTopStyle">
+                <div :class="headerWraperClasses" :style="{height: headerHeight + 'px'}">
                     <table ref="headerTable" cellspacing="0" cellpadding="0" border="0" width="100%">
                         <colgroup>
                             <col :width="width" v-for="(width, i) in cellWidthArr" :key="'header-key-' + i"></col>
@@ -59,6 +60,10 @@ export default {
         cellWidth: {
             type: Number,
             default: 100
+        },
+        headerHeight: {
+            type: Number,
+            default: 52
         }
     },
     data () {
@@ -115,6 +120,9 @@ export default {
             return [
                 `${this.prefix}-header-inside-wraper`
             ];
+        },
+        marginTopStyle () {
+            return this.fixed && this.headerHeight ? {marginTop: this.headerHeight + 'px'} : {}
         },
         cellNum () { // 表格列数
             return this.columns.length;
@@ -277,7 +285,6 @@ export default {
                 this.widthArr.splice(index, 2, widthLeft, widthRight);
                 this.initCellX = e.pageX;
             }
-            console.log(123123)
         },
         handleMousedown (e) {
             if (this.isOnCellEdge) {
@@ -292,9 +299,6 @@ export default {
     watch: {
         columns () {
             this.$nextTick(() => {
-                console.log(this.cellWidth)
-                console.log(this.cellNum)
-                console.log(this.getDomWidth(this.$refs.headerTable))
                 this.tableWidth = this.cellWidth * this.columns.length > this.getDomWidth(this.$refs.headerTable) ? this.cellWidth * this.columns.length : false;
                 this.widthArr = this.cellWidthArr;
             });
