@@ -31,7 +31,8 @@ export default {
     this.columns = [
       {
         title: 'id',
-        key: 'id'
+        key: 'id',
+        width: 100
       },
       {
         title: 'value',

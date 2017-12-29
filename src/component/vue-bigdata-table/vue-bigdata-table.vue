@@ -133,10 +133,12 @@ export default {
             let noWidthCellWidth = (this.tableWidth - hasWidthCellTotalWidth) / (len - hasWidthCellCount);
             let w = 0;
             let indexArrLen = noWidthCellIndexArr.length;
+            console.log(cellWidthArr)
             while (w < indexArrLen) {
-                cellWidthArr[w] = noWidthCellWidth;
+                cellWidthArr[noWidthCellIndexArr[w]] = noWidthCellWidth;
                 w++;
             }
+            console.log(cellWidthArr)
             return cellWidthArr;
         }
     },
@@ -150,7 +152,6 @@ export default {
         updateHeight () {
             let wraperHeight = this.getDomHeight(this.$refs.outWraper);
             this.tableWidth = this.getDomWidth(this.$refs.headerTable);
-            // this.initCellWidth = this.tableWidth / this.columns.length;
             this.itemNum = Math.ceil(wraperHeight / this.itemRowHeight) + 10;
             this.moduleHeight = this.itemNum * this.itemRowHeight;
         },
