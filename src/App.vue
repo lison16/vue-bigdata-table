@@ -106,7 +106,7 @@ export default {
 }
 .wraper{
   margin: 100px 100px;
-  width: 1000px;
+  width: 500px;
   height: 700px;
   overflow: auto;
 }

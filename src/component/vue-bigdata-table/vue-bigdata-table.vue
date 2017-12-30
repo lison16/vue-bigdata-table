@@ -40,6 +40,7 @@
 <script>
 import renderDom from './renderDom';
 import ItemTable from './item-table.vue';
+import { findNodeUpper } from './util';
 export default {
     name: 'BigdataTable',
     components: {
@@ -87,6 +88,7 @@ export default {
             isOnCellEdge: false, // 鼠标是否在表头的两个单元格之间的边框上
             canMove: false,
             initCellX: 0, // 用于计算鼠标移动的距离
+            scrollLeft: 0
         };
     },
     computed: {
@@ -256,7 +258,8 @@ export default {
         },
         handleMousemove (e) {
             let parentRow = e.currentTarget;
-            let cell = e.srcElement;
+            let cell = e.srcElement.tagName.toUpperCase() === 'TH' ? e.srcElement : findNodeUpper(e.srcElement, 'th');
+            console.log(cell.parentNode.tagName)
             let cellDomrect = cell.getBoundingClientRect();
             let atLeft = (e.pageX - cellDomrect.left) < (cellDomrect.width / 2);
             let cellIndex = parseInt(cell.getAttribute('data-index')); // 当前单元格的序号
