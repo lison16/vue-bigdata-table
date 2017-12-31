@@ -24,7 +24,7 @@
                             <th v-for="(col, i) in columns" :data-index="i" :key="`table-title-${i}`">
                                 <!-- <div :class="headerThInsideWraper"> -->
                                     <span v-if="!col.render">{{ col.title }}</span>
-                                    <render-dom v-else :render="col.render"></render-dom>
+                                    <render-dom v-else :render="col.render" :index="i"></render-dom>
                                 <!-- </div> -->
                             </th>
                         </tr>
@@ -208,9 +208,12 @@ export default {
         getItemTable (h, data, index) {
             return h(ItemTable, {
                 props: {
+                    times: this['times' + (index - 1)],
+                    tableIndex: index,
                     itemData: data,
                     rowStyles: this.rowStyles,
-                    widthArr: this.widthArr
+                    widthArr: this.widthArr,
+                    columns: this.columns
                 },
                 key: 'table-item-key' + index,
                 ref: 'itemTable' + index
@@ -259,7 +262,6 @@ export default {
         handleMousemove (e) {
             let parentRow = e.currentTarget;
             let cell = e.srcElement.tagName.toUpperCase() === 'TH' ? e.srcElement : findNodeUpper(e.srcElement, 'th');
-            console.log(cell.parentNode.tagName)
             let cellDomrect = cell.getBoundingClientRect();
             let atLeft = (e.pageX - cellDomrect.left) < (cellDomrect.width / 2);
             let cellIndex = parseInt(cell.getAttribute('data-index')); // 当前单元格的序号

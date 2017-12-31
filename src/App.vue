@@ -21,9 +21,8 @@ export default {
   },
   mounted () {
     let dataArr = [];
-    for (let i = 0; i < 10000; i++) {
+    for (let i = 0; i < 1000; i++) {
       dataArr.push({
-        id: i,
         value: i + '00',
         count: 'count' + i,
         name: 'namenasdfsdfsdfsdfssdfsdfsdsdfsdfsdfsf' + i,
@@ -32,20 +31,25 @@ export default {
         sds: 'namenasdfsdfsdfsdfssdfsdfsdsdfsdfsf' + i,
         sdds: 'namenasdfsdfsdfsdfssdfsdfsdsdfsdfsdfsf' + i,
         sdsss: 'namenasdfsdfsdfsdfssdfsdfsdsdfsdfsf' + i,
-        sddsss: 'namenasdfsdfsdfsdfssdfsdfsdsdfsdfsdfsf' + i
+        time: '2014年1月1日'
       });
     }
     this.tableData = dataArr;
     this.columns = [
       {
         title: 'id',
-        key: 'id',
-        width: 100
+        // key: 'id',
+        width: 100,
+        // align: 'center',
+        cellRender: (h) => {
+          // return h
+        },
+        type: 'index'
       },
       {
         title: 'value',
-        key: 'value',
-        render: (h, params) => {
+        // key: 'value',
+        render: (h, index) => {
           return h('button', {
             style: {
               width: '100%',
@@ -53,43 +57,45 @@ export default {
             },
             on: {
               click () {
-                console.log(params)
+                console.log(index)
               }
             }
           }, 'haha')
-        }
+        },
+        // align: 'left'
       },
       {
         title: 'count',
-        key: 'count'
+        // key: 'count',
+        // align: 'right'
       },
       {
         title: 'name',
-        key: 'name'
+        // key: 'name'
       },
       {
         title: 'count',
-        key: 'sd'
+        // key: 'sd'
       },
       {
         title: 'name',
-        key: 'sdd'
+        // key: 'sdd'
       },
       {
         title: 'count',
-        key: 'sds'
+        // key: 'sds'
       },
       {
         title: 'name',
-        key: 'sdds'
+        // key: 'sdds'
       },
       {
         title: 'count',
-        key: 'sdsss'
+        // key: 'sdsss'
       },
       {
-        title: 'name',
-        key: 'sddsss'
+        title: 'time',
+        // key: 'sddsss'
       }
     ];
   }
