@@ -8,7 +8,7 @@
         </colgroup>
         <tbody>
             <tr v-for="(tr, index) in itemData" :key="index">
-                <td v-if="showIndex" class="vue-bigdata-table-data-table-center vue-bigdata-table-cell">{{ indexBase + index }}</td>
+                <td v-if="showIndex" :class="['vue-bigdata-table-cell', indexAlign]">{{ indexBase + index }}</td>
                 <td v-for="(td, tdKey, i) in tr" :class="['vue-bigdata-table-cell', setAlign(i, td)]" :style="rowStyles" :key="tdKey">
                     <div class="vue-bigdata-table-cell">{{ td }}</div>
                 </td>
@@ -41,8 +41,25 @@ export default {
                 this.prefix
             ];
         },
+        indexColumnsIndex () {
+            this.columns.some(item => {return item.type === 'index'});
+            let i = 0;
+            let len = this.columns.length;
+            while (i < len) {
+                if (this.columns[i].type === 'index') {
+                    return i;
+                }
+                i++
+            }
+            return false;
+        },
         showIndex () {
-            return this.columns.some(item => {return item.type === 'index'});
+            console.log(this.indexColumnsIndex);
+            return this.indexColumnsIndex === 0 || this.indexColumnsIndex;
+            // return (!this.indexColumnsIndex && this.indexColumnsIndex === 0 || this.indexColumnsIndex);
+        },
+        indexAlign () {
+            return this.prefix + '-' + (this.columns[this.indexColumnsIndex].align || 'center');
         },
         indexBase () {
             return this.times * this.itemNum * 3 + this.itemNum * (this.tableIndex - 1);
