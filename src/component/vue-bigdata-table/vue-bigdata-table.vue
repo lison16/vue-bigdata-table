@@ -211,6 +211,7 @@ export default {
                     times: this['times' + (index - 1)],
                     tableIndex: index,
                     itemData: data,
+                    itemNum: this.itemNum,
                     rowStyles: this.rowStyles,
                     widthArr: this.widthArr,
                     columns: this.columns

@@ -21,7 +21,7 @@ export default {
   },
   mounted () {
     let dataArr = [];
-    for (let i = 0; i < 1000; i++) {
+    for (let i = 0; i < 10000; i++) {
       dataArr.push({
         value: i + '00',
         count: 'count' + i,
