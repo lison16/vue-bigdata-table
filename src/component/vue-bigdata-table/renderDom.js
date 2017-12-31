@@ -3,9 +3,9 @@ export default {
     functional: true,
     props: {
         render: Function,
-        index: Number
+        backValue: [Number, Object]
     },
     render: (h, ctx) => {
-        return ctx.props.render(h, ctx.props.index);
+        return ctx.props.render(h, ctx.props.backValue);
     }
 };

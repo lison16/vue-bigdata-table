@@ -24,7 +24,7 @@
                             <th v-for="(col, i) in columns" :data-index="i" :key="`table-title-${i}`">
                                 <!-- <div :class="headerThInsideWraper"> -->
                                     <span v-if="!col.render">{{ col.title }}</span>
-                                    <render-dom v-else :render="col.render" :index="i"></render-dom>
+                                    <render-dom v-else :render="col.render" :back-value="i"></render-dom>
                                 <!-- </div> -->
                             </th>
                         </tr>

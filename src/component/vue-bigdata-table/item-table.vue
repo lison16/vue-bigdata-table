@@ -10,7 +10,10 @@
             <tr v-for="(tr, index) in itemData" :key="index">
                 <td v-if="showIndex" :class="['vue-bigdata-table-cell', indexAlign]">{{ indexBase + index }}</td>
                 <td v-for="(td, tdKey, i) in tr" :class="['vue-bigdata-table-cell', setAlign(i, td)]" :style="rowStyles" :key="tdKey">
-                    <div class="vue-bigdata-table-cell">{{ td }}</div>
+                    <div v-if="!showCellRender[showIndex ? (i + 1) : i]" class="vue-bigdata-table-cell">{{ td }}</div>
+                    <template v-else>
+                        <render-dom :render="showCellRender[showIndex ? (i + 1) : i]" :back-value="backValue((indexBase + index), i)"></render-dom>
+                    </template>
                 </td>
             </tr>
         </tbody>
@@ -18,8 +21,12 @@
 </template>
 <script>
 import { hasOneOf } from './util';
+import renderDom from './renderDom';
 export default {
     name: 'ItemTable',
+    components: {
+        renderDom
+    },
     data () {
         return {
             prefix: 'vue-bigdata-table-data-table',
@@ -54,15 +61,21 @@ export default {
             return false;
         },
         showIndex () {
-            console.log(this.indexColumnsIndex);
             return this.indexColumnsIndex === 0 || this.indexColumnsIndex;
-            // return (!this.indexColumnsIndex && this.indexColumnsIndex === 0 || this.indexColumnsIndex);
         },
         indexAlign () {
             return this.prefix + '-' + (this.columns[this.indexColumnsIndex].align || 'center');
         },
         indexBase () {
             return this.times * this.itemNum * 3 + this.itemNum * (this.tableIndex - 1);
+        },
+        showCellRender () {
+            console.log(this.columns.map(item => {
+                return item.cellRender ? item.cellRender : undefined;
+            }))
+            return this.columns.map(item => {
+                return item.cellRender ? item.cellRender : undefined;
+            });
         }
     },
     methods: {
@@ -88,6 +101,12 @@ export default {
                 align = 'center';
             }
             return this.prefix + '-' + align;
+        },
+        backValue (row, col) {
+            return {
+                row: row,
+                col: col
+            };
         }
     }
 };

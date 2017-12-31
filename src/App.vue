@@ -23,6 +23,7 @@ export default {
     let dataArr = [];
     for (let i = 0; i < 10000; i++) {
       dataArr.push({
+        id: i,
         value: i + '00',
         count: 'count' + i,
         name: 'namenasdfsdfsdfsdfssdfsdfsdsdfsdfsdfsf' + i,
@@ -41,10 +42,16 @@ export default {
         // key: 'id',
         width: 100,
         // align: 'center',
-        cellRender: (h) => {
-          // return h
-        },
-        type: 'index'
+        // cellRender: (h) => {
+        //   return h('button', {
+        //     on: {
+        //       click: (res) => {
+        //         console.log(res)
+        //       }
+        //     }
+        //   }, 'click me')
+        // },
+        // type: 'index'
       },
       {
         title: 'value',
@@ -61,6 +68,15 @@ export default {
               }
             }
           }, 'haha')
+        },
+        cellRender: (h, params) => {
+          return h('button', {
+            on: {
+              click: () => {
+                console.log(params)
+              }
+            }
+          }, 'click me')
         },
         // align: 'left'
       },
