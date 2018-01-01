@@ -56,7 +56,7 @@ export default {
       {
         title: 'value',
         // key: 'value',
-        render: (h, index) => {
+        render: (h, col) => {
           return h('button', {
             style: {
               width: '100%',
@@ -64,7 +64,7 @@ export default {
             },
             on: {
               click () {
-                console.log(index)
+                console.log(col)
               }
             }
           }, 'haha')

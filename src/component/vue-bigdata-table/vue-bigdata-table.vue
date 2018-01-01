@@ -124,7 +124,10 @@ export default {
             ];
         },
         marginTopStyle () {
-            return this.fixed && this.headerHeight ? {marginTop: this.headerHeight + 'px'} : {}
+            return this.fixed && this.headerHeight ? {
+                marginTop: this.headerHeight + 'px',
+                height: 'calc(100% - ' + this.headerHeight + 'px)'
+            } : {}
         },
         cellNum () { // 表格列数
             return this.columns.length;
