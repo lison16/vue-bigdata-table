@@ -70,9 +70,6 @@ export default {
             return this.times * this.itemNum * 3 + this.itemNum * (this.tableIndex - 1);
         },
         showCellRender () {
-            console.log(this.columns.map(item => {
-                return item.cellRender ? item.cellRender : undefined;
-            }))
             return this.columns.map(item => {
                 return item.cellRender ? item.cellRender : undefined;
             });
