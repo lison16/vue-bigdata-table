@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <div class="wraper">
-      <bigdata-table :cell-width="200" :header-height="80" fixed v-model="tableData" :columns="columns"></bigdata-table>
+      <bigdata-table :cell-width="100" :header-height="80" fixed v-model="tableData" :columns="columns"></bigdata-table>
     </div>
   </div>
 </template>
@@ -21,18 +21,18 @@ export default {
   },
   mounted () {
     let dataArr = [];
-    for (let i = 0; i < 100; i++) {
+    for (let i = 0; i < 1000; i++) {
       dataArr.push({
         id: i,
         value: i + '00',
         count: 'count' + i,
-        name: 'namenasdfsdfsdfsdfssdfsdfsdsdfsdfsdfsf' + i,
-        sd: 'namenasdfsdfsdfsdfssdfsdfsdsdfsdfsf' + i,
-        sdd: 'namenasdfsdfsdfsdfssdfsdfsdsdfsdfsdfsf' + i,
-        sds: 'namenasdfsdfsdfsdfssdfsdfsdsdfsdfsf' + i,
-        sdds: 'namenasdfsdfsdfsdfssdfsdfsdsdfsdfsdfsf' + i,
-        sdsss: 'namenasdfsdfsdfsdfssdfsdfsdsdfsdfsf' + i,
-        time: '2014年1月1日'
+        // name: 'namenasdfsdfsdfsdfssdfsdfsdsdfsdfsdfsf' + i,
+        // sd: 'namenasdfsdfsdfsdfssdfsdfsdsdfsdfsf' + i,
+        // sdd: 'namenasdfsdfsdfsdfssdfsdfsdsdfsdfsdfsf' + i,
+        // sds: 'namenasdfsdfsdfsdfssdfsdfsdsdfsdfsf' + i,
+        // sdds: 'namenasdfsdfsdfsdfssdfsdfsdsdfsdfsdfsf' + i,
+        // sdsss: 'namenasdfsdfsdfsdfssdfsdfsdsdfsdfsf' + i,
+        // time: '2014年1月1日'
       });
     }
     this.tableData = dataArr;
@@ -85,34 +85,34 @@ export default {
         // key: 'count',
         // align: 'right'
       },
-      {
-        title: 'name',
-        // key: 'name'
-      },
-      {
-        title: 'count',
-        // key: 'sd'
-      },
-      {
-        title: 'name',
-        // key: 'sdd'
-      },
-      {
-        title: 'count',
-        // key: 'sds'
-      },
-      {
-        title: 'name',
-        // key: 'sdds'
-      },
-      {
-        title: 'count',
-        // key: 'sdsss'
-      },
-      {
-        title: 'time',
-        // key: 'sddsss'
-      }
+      // {
+      //   title: 'name',
+      //   // key: 'name'
+      // },
+      // {
+      //   title: 'count',
+      //   // key: 'sd'
+      // },
+      // {
+      //   title: 'name',
+      //   // key: 'sdd'
+      // },
+      // {
+      //   title: 'count',
+      //   // key: 'sds'
+      // },
+      // {
+      //   title: 'name',
+      //   // key: 'sdds'
+      // },
+      // {
+      //   title: 'count',
+      //   // key: 'sdsss'
+      // },
+      // {
+      //   title: 'time',
+      //   // key: 'sddsss'
+      // }
     ];
   }
 }
@@ -123,13 +123,13 @@ export default {
   position: absolute;
   top: 0px;
   right: 100px;
-  bottom: 100px;
+  bottom: 0px;
   left: 100px;
 }
 .wraper{
-  margin: 100px 100px;
+  margin: 100px 100px 0;
   width: 500px;
-  height: 700px;
+  height: 300px;
   overflow: auto;
 }
 h1, h2 {

@@ -75,10 +75,8 @@ export default {
             times2: 0,
             currentIndex: 0, // 当前展示的表格是第几个
             itemNum: 50, // 一块数据显示的数据条数
-            scrollTop: 0,
             moduleHeight: 0, // 三个tr块中的一块的高度
             topPlaceholderHeight: 0, // 顶部占位容器高度
-            mark: 0, // 用于保存滚动距离来计算滚动方向
             direction: 0, // 滚动方向 1 is down, 0 is up
             tableWidth: 0,
             widthArr: [], // 用于给数据表格传递列宽
@@ -240,28 +238,22 @@ export default {
         },
         handleScroll (e) {
             let scrollTop = e.srcElement.scrollTop;
-            this.direction = this.mark >= scrollTop ? 1 : 0; // 1 is down, 0 is up
-            if (this.direction) {
-                if (this.scrollTop < this.topPlaceholderHeight + this.moduleHeight) {
-                    this.topPlaceholderHeight -= this.moduleHeight;
-                    this.currentIndex--;
-                    if (this.currentIndex <= -1) {
-                        this.currentIndex = 2;
-                    }
-                    this['times' + (this.currentIndex)]--;
-                }
-            } else {
-                if ((this.scrollTop > this.topPlaceholderHeight + this.moduleHeight * 2)) {
-                    this.topPlaceholderHeight += this.moduleHeight;
-                    this['times' + (this.currentIndex)]++;
-                    this.currentIndex++;
-                    if (this.currentIndex >= 3) {
-                        this.currentIndex = 0;
-                    }
+            this.currentIndex = parseInt((scrollTop % (this.moduleHeight * 3)) / this.moduleHeight);
+            let t0 = 0;
+            let t1 = 0;
+            let t2 = 0;
+            if (scrollTop > this.moduleHeight) {
+                switch (this.currentIndex) {
+                    case 0: t0 = parseInt(scrollTop / (this.moduleHeight * 3)); t1 = t2 = t0; break;
+                    case 1: t1 = parseInt((scrollTop - this.moduleHeight) / (this.moduleHeight * 3)); t0 = t1 + 1; t2 = t1; break;
+                    case 2: t2 = parseInt((scrollTop - this.moduleHeight * 2) / (this.moduleHeight * 3)); t0 = t1 = t2 + 1;
                 }
             }
-            this.scrollTop = scrollTop;
-            this.mark = scrollTop;
+            this.times0 = t0;
+            this.times1 = t1;
+            this.times2 = t2;
+            
+            this.topPlaceholderHeight = parseInt(scrollTop / this.moduleHeight) * this.moduleHeight;
         },
         handleMousemove (e) {
             let parentRow = e.currentTarget;
