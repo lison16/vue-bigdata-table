@@ -131,7 +131,7 @@ export default {
             return this.columns.length;
         },
         tableWidthStyles () {
-            return this.tableWidth ? {width: this.tableWidth + 'px'} : '100%';
+            return this.tableWidth + 'px';
         },
         table1Data () {
             let count = this.times0 * this.itemNum * 3;
@@ -300,7 +300,8 @@ export default {
     watch: {
         columns () {
             this.$nextTick(() => {
-                this.tableWidth = this.cellWidth * this.columns.length > this.getDomWidth(this.$refs.headerTable) ? this.cellWidth * this.columns.length : false;
+                console.log(this.getDomWidth(this.$refs.headerTable))
+                this.tableWidth = this.cellWidth * this.columns.length > this.getDomWidth(this.$refs.headerTable) ? this.cellWidth * this.columns.length : this.getDomWidth(this.$refs.headerTable);
                 this.widthArr = this.cellWidthArr;
             });
         }
