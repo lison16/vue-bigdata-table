@@ -87,7 +87,7 @@ export default {
             canMove: false,
             initCellX: 0, // 用于计算鼠标移动的距离
             scrollLeft: 0,
-            wraperWidthPersent : false // 用于标记tableWidthStyles的宽度是否是百分100
+            wraperWidthPersent: false // 用于标记tableWidthStyles的宽度是否是百分100
         };
     },
     computed: {
