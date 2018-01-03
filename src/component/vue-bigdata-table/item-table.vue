@@ -8,7 +8,7 @@
         </colgroup>
         <tbody>
             <tr v-for="(tr, index) in itemData" :key="index">
-                <td v-if="showIndex" :class="['vue-bigdata-table-cell', indexAlign]">{{ indexBase + index }}</td>
+                <td v-if="showIndex" :class="['vue-bigdata-table-cell', 'vue-bigdata-table-data-table-center']">{{ indexBase + index + 1 }}</td>
                 <td v-for="(td, tdKey, i) in tr" :class="['vue-bigdata-table-cell', setAlign(i, td)]" :style="rowStyles" :key="tdKey">
                     <div v-if="!showCellRender[showIndex ? (i + 1) : i]" class="vue-bigdata-table-cell">{{ td }}</div>
                     <template v-else>
@@ -23,88 +23,87 @@
 import { hasOneOf } from './util';
 import renderDom from './renderDom';
 export default {
-    name: 'ItemTable',
-    components: {
-        renderDom
-    },
-    data () {
-        return {
-            prefix: 'vue-bigdata-table-data-table',
-            tableWidth: 0,
-        };
-    },
-    props: {
-        times: Number,
-        tableIndex: Number,
-        itemData: Array,
-        rowStyles: Object,
-        widthArr: Array,
-        columns: Array,
-        itemNum: Number
-    },
-    computed: {
-        dataTableClasses () {
-            return [
-                this.prefix
-            ];
-        },
-        indexColumnsIndex () {
-            this.columns.some(item => {return item.type === 'index'});
-            let i = 0;
-            let len = this.columns.length;
-            while (i < len) {
-                if (this.columns[i].type === 'index') {
-                    return i;
-                }
-                i++
-            }
-            return false;
-        },
-        showIndex () {
-            return this.indexColumnsIndex === 0 || this.indexColumnsIndex;
-        },
-        indexAlign () {
-            return this.prefix + '-' + (this.columns[this.indexColumnsIndex].align || 'center');
-        },
-        indexBase () {
-            return this.times * this.itemNum * 3 + this.itemNum * (this.tableIndex - 1);
-        },
-        showCellRender () {
-            return this.columns.map(item => {
-                return item.cellRender ? item.cellRender : undefined;
-            });
-        }
-    },
-    methods: {
-        getCellWidth (col) {
-            if (col.width === undefined) {
-                return this.$refs.itemTable.offsetWidth / this.columns.length;
-            }
-        },
-        setAlign (i, content) {
-            let col = this.columns[i];
-            let align = (col && col.align) ? col.align : false;
-            if (!align) {
-                if (typeof content === 'number' || (!isNaN(parseFloat(content)) && ('1' + content === parseFloat('1' + content).toString()))) {
-                    align = 'right';
-                } else {
-                    if (hasOneOf(content, [':', '年', '月', '日', '-', '：', '星期', '周'])) {
-                        align = 'center';
-                    } else {
-                        align = 'left'
-                    }
-                }
-            } else {
-                align = 'center';
-            }
-            return this.prefix + '-' + align;
-        },
-        backValue (row, col) {
-            return {
-                row: row,
-                col: col
-            };
-        }
-    }
+	name: 'ItemTable',
+	components: {
+		renderDom
+	},
+	data () {
+		return {
+			prefix: 'vue-bigdata-table-data-table',
+			tableWidth: 0
+		};
+	},
+	props: {
+		times: Number,
+		tableIndex: Number,
+		itemData: Array,
+		rowStyles: Object,
+		widthArr: Array,
+		columns: Array,
+		itemNum: Number,
+		showIndex: Boolean
+	},
+	computed: {
+		dataTableClasses () {
+			return [
+				this.prefix
+			];
+		},
+		indexColumnsIndex () {
+			this.columns.some(item => {
+				return item.type === 'index';
+			});
+			let i = 0;
+			let len = this.columns.length;
+			while (i < len) {
+				if (this.columns[i].type === 'index') {
+					return i;
+				}
+				i++;
+			}
+			return false;
+		},
+		indexAlign () {
+			return this.prefix + '-' + (this.columns[this.indexColumnsIndex].align || 'center');
+		},
+		indexBase () {
+			return this.times * this.itemNum * 3 + this.itemNum * (this.tableIndex - 1);
+		},
+		showCellRender () {
+			return this.columns.map(item => {
+				return item.cellRender ? item.cellRender : undefined;
+			});
+		}
+	},
+	methods: {
+		getCellWidth (col) {
+			if (col.width === undefined) {
+				return this.$refs.itemTable.offsetWidth / this.columns.length;
+			}
+		},
+		setAlign (i, content) {
+			i = this.showIndex ? i + 1 : i;
+			let col = this.columns[i];
+			let align = (col && col.align) ? col.align : false;
+			if (!align) {
+				if (typeof content === 'number' || (!isNaN(parseFloat(content)) && ('1' + content === parseFloat('1' + content).toString()))) {
+					align = 'right';
+				} else {
+					if (hasOneOf(content, [':', '年', '月', '日', '-', '：', '星期', '周'])) {
+						align = 'center';
+					} else {
+						align = 'left';
+					}
+				}
+			}
+			return this.prefix + '-' + align;
+		},
+		backValue (row, col) {
+			return {
+				row: row,
+				col: col
+			};
+		}
+	}
 };
 </script>

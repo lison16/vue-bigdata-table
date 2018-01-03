@@ -21,10 +21,10 @@
                             @mousedown="handleMousedown"
                             @mouseup="canNotMove"
                             @mouseleave="canNotMove">
-                            <th v-for="(col, i) in columnsCloned" :data-index="i" :key="`table-title-${i}`">
+                            <th v-for="(col, i) in columnsWidthIndex" :data-index="i" :key="`table-title-${i}`">
                                 <!-- <div :class="headerThInsideWraper"> -->
                                     <span v-if="!col.render">{{ col.title }}</span>
-                                    <render-dom v-else :render="col.render" :back-value="i"></render-dom>
+                                    <render-dom v-else :render="col.render" :back-value="showIndex ? (i - 1) : i"></render-dom>
                                 <!-- </div> -->
                             </th>
                         </tr>
@@ -47,6 +47,10 @@ export default {
 		renderDom
 	},
 	props: {
+		showIndex: {
+			type: Boolean,
+			default: false
+		},
 		value: {
 			type: Array
 		},
@@ -130,8 +134,27 @@ export default {
 			} : {};
 		},
 		cellNum () { // 表格列数
-			this.columnsCloned = this.columns;
+			// this.columnsCloned = this.columns;
+			// if (this.showIndex) {
+			// 	this.columnsCloned.unshift({
+			// 		title: '',
+			// 		align: 'center',
+			// 		width: 100
+			// 	});
+			// }
 			return this.columns.length;
+		},
+		columnsWidthIndex () {
+			// console.log(this.columns);
+			let columns = [...this.columns];
+			if (this.showIndex) {
+				columns.unshift({
+					title: '#',
+					align: 'center',
+					width: 100
+				});
+			};
+			return columns;
 		},
 		tableWidthStyles () {
 			return this.wraperWidthPersent ? {width: this.tableWidth + 'px'} : {width: '100%'};
@@ -172,10 +195,10 @@ export default {
 			let noWidthCellIndexArr = []; // 没有设置宽度的列的序列
 			let hasWidthCellTotalWidth = 0; // 设置了width的列一共多宽
 			while (i < len) {
-				if (this.columns[i].width) {
+				if (this.columnsWidthIndex[i].width) {
 					hasWidthCellCount++;
-					hasWidthCellTotalWidth += this.columns[i].width;
-					cellWidthArr.push(this.columns[i].width);
+					hasWidthCellTotalWidth += this.columnsWidthIndex[i].width;
+					cellWidthArr.push(this.columnsWidthIndex[i].width);
 				} else {
 					noWidthCellIndexArr.push(i);
 					cellWidthArr.push(0);
@@ -217,7 +240,8 @@ export default {
 					itemNum: this.itemNum,
 					rowStyles: this.rowStyles,
 					widthArr: this.widthArr,
-					columns: this.columns
+					columns: this.columnsWidthIndex,
+					showIndex: this.showIndex
 				},
 				key: 'table-item-key' + index,
 				ref: 'itemTable' + index
@@ -309,12 +333,15 @@ export default {
 		columns () {
 			this.resize();
 		},
+		columnsWidthIndex () {
+			this.resize();
+		},
 		cellWidth () {
 			this.resize();
 		}
 	},
 	mounted () {
-		this.updateHeight();
+		this.resize();
 	}
 };
 </script>

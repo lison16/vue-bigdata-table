@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <div class="wraper">
-      <bigdata-table :cell-width="200"  :header-height="80" fixed v-model="tableData" :columns="columns"></bigdata-table>
+      <bigdata-table show-index :cell-width="200"  :header-height="80" fixed v-model="tableData" :columns="columns"></bigdata-table>
     </div>
   </div>
 </template>
@@ -23,7 +23,7 @@ export default {
     let dataArr = [];
     for (let i = 0; i < 1000; i++) {
       dataArr.push({
-        id: i,
+        // id: i,
         value: i + '00',
         count: 'count' + i,
         // name: 'namenasdfsdfsdfsdfssdfsdfsdsdfsdfsdfsf' + i,
@@ -37,22 +37,22 @@ export default {
     }
     this.tableData = dataArr;
     this.columns = [
-      {
-        title: 'id',
-        // key: 'id',
-        width: 100,
-        // align: 'center',
-        // cellRender: (h) => {
-        //   return h('button', {
-        //     on: {
-        //       click: (res) => {
-        //         console.log(res)
-        //       }
-        //     }
-        //   }, 'click me')
-        // },
-        // type: 'index'
-      },
+      // {
+      //   title: 'id',
+      //   // key: 'id',
+      //   width: 100,
+      //   // align: 'center',
+      //   // cellRender: (h) => {
+      //   //   return h('button', {
+      //   //     on: {
+      //   //       click: (res) => {
+      //   //         console.log(res)
+      //   //       }
+      //   //     }
+      //   //   }, 'click me')
+      //   // },
+      //   // type: 'index'
+      // },
       {
         title: 'value',
         // key: 'value',
