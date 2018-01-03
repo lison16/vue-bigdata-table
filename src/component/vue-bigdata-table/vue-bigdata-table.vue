@@ -138,18 +138,9 @@ export default {
 			} : {};
 		},
 		cellNum () { // 表格列数
-			// this.columnsCloned = this.columns;
-			// if (this.showIndex) {
-			// 	this.columnsCloned.unshift({
-			// 		title: '',
-			// 		align: 'center',
-			// 		width: 100
-			// 	});
-			// }
 			return this.columnsWidthIndex.length;
 		},
 		columnsWidthIndex () {
-			// console.log(this.columns);
 			let columns = [...this.columns];
 			if (this.showIndex) {
 				columns.unshift({
