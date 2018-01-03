@@ -2,7 +2,7 @@ export const findNodeUpper = (ele, tag) => {
     if (ele.parentNode && ele.parentNode.tagName === tag.toUpperCase()) {
         return ele.parentNode;
     } else {
-        findNodeUpper(ele.parentNode, tag);
+        return findNodeUpper(ele.parentNode, tag);
     }
 }
 
