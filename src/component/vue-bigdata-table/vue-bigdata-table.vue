@@ -86,7 +86,8 @@ export default {
             isOnCellEdge: false, // 鼠标是否在表头的两个单元格之间的边框上
             canMove: false,
             initCellX: 0, // 用于计算鼠标移动的距离
-            scrollLeft: 0
+            scrollLeft: 0,
+            wraperWidthPersent : false // 用于标记tableWidthStyles的宽度是否是百分100
         };
     },
     computed: {
@@ -131,7 +132,7 @@ export default {
             return this.columns.length;
         },
         tableWidthStyles () {
-            return this.tableWidth + 'px';
+            return this.wraperWidthPersent ? {width: this.tableWidth + 'px'} : {width: '100%'};
         },
         table1Data () {
             let count = this.times0 * this.itemNum * 3;
@@ -300,6 +301,7 @@ export default {
         columns () {
             this.$nextTick(() => {
                 this.tableWidth = this.cellWidth * this.columns.length > this.getDomWidth(this.$refs.headerTable) ? this.cellWidth * this.columns.length : this.getDomWidth(this.$refs.headerTable);
+                this.wraperWidthPersent = this.cellWidth * this.columns.length > this.getDomWidth(this.$refs.headerTable);
                 this.widthArr = this.cellWidthArr;
             });
         }
