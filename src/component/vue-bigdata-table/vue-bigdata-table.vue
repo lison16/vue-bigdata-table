@@ -256,7 +256,6 @@ export default {
             this.topPlaceholderHeight = parseInt(scrollTop / this.moduleHeight) * this.moduleHeight;
         },
         handleMousemove (e) {
-            let parentRow = e.currentTarget;
             let cell = e.srcElement.tagName.toUpperCase() === 'TH' ? e.srcElement : findNodeUpper(e.srcElement, 'th');
             let cellDomrect = cell.getBoundingClientRect();
             let atLeft = (e.pageX - cellDomrect.left) < (cellDomrect.width / 2);
@@ -300,7 +299,6 @@ export default {
     watch: {
         columns () {
             this.$nextTick(() => {
-                console.log(this.getDomWidth(this.$refs.headerTable))
                 this.tableWidth = this.cellWidth * this.columns.length > this.getDomWidth(this.$refs.headerTable) ? this.cellWidth * this.columns.length : this.getDomWidth(this.$refs.headerTable);
                 this.widthArr = this.cellWidthArr;
             });
