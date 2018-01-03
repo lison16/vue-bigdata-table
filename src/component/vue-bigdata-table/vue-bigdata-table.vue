@@ -16,7 +16,7 @@
                             <col :width="width" v-for="(width, i) in cellWidthArr" :key="'header-key-' + i"></col>
                         </colgroup>
                         <tr 
-                            :style="{cursor: cursorOnHeader}" 
+                            :style="{cursor: cursorOnHeader}"
                             @mousemove.capture.prevent="handleMousemove"
                             @mousedown="handleMousedown"
                             @mouseup="canNotMove"
@@ -69,6 +69,10 @@ export default {
 		headerHeight: {
 			type: Number,
 			default: 52
+		},
+		indexWidth: {
+			type: Number,
+			default: 100
 		}
 	},
 	data () {
@@ -142,7 +146,7 @@ export default {
 			// 		width: 100
 			// 	});
 			// }
-			return this.columns.length;
+			return this.columnsWidthIndex.length;
 		},
 		columnsWidthIndex () {
 			// console.log(this.columns);
@@ -151,7 +155,7 @@ export default {
 				columns.unshift({
 					title: '#',
 					align: 'center',
-					width: 100
+					width: this.indexWidth
 				});
 			};
 			return columns;
@@ -260,7 +264,9 @@ export default {
 			}
 		},
 		renderTable (h) {
-			return h('div', this.getTables(h));
+			return h('div', {
+				// style: this.tableWidthStyles
+			}, this.getTables(h));
 		},
 		handleScroll (e) {
 			let scrollTop = e.srcElement.scrollTop;
@@ -323,8 +329,9 @@ export default {
 		resize () {
 			this.$nextTick(() => {
 				this.updateHeight();
-				this.tableWidth = this.cellWidth * this.columns.length > this.getDomWidth(this.$refs.headerTable) ? this.cellWidth * this.columns.length : this.getDomWidth(this.$refs.headerTable);
-				this.wraperWidthPersent = this.cellWidth * this.columns.length > this.getDomWidth(this.$refs.headerTable);
+				let width = this.cellWidth * this.columns.length + (this.showIndex ? this.indexWidth : 0);
+				this.tableWidth = width > this.getDomWidth(this.$refs.headerTable) ? width : this.getDomWidth(this.$refs.headerTable);
+				this.wraperWidthPersent = width > this.getDomWidth(this.$refs.headerTable);
 				this.widthArr = this.cellWidthArr;
 			});
 		}

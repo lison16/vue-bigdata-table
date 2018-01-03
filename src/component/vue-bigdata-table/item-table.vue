@@ -2,7 +2,7 @@
     <table ref="itemTable" :class="dataTableClasses" cellspacing="0" cellpadding="0" border="0" width="100%">
         <colgroup>
             <col 
-                :width="width" v-for="(width, i) in widthArr" 
+                :width="width" v-for="(width, i) in widthArr"
                 :key="'colgroup-' + i"
             >
         </colgroup>
