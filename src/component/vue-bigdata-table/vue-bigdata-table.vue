@@ -21,7 +21,7 @@
                             @mousedown="handleMousedown"
                             @mouseup="canNotMove"
                             @mouseleave="canNotMove">
-                            <th v-for="(col, i) in columns" :data-index="i" :key="`table-title-${i}`">
+                            <th v-for="(col, i) in columnsCloned" :data-index="i" :key="`table-title-${i}`">
                                 <!-- <div :class="headerThInsideWraper"> -->
                                     <span v-if="!col.render">{{ col.title }}</span>
                                     <render-dom v-else :render="col.render" :back-value="i"></render-dom>
@@ -70,6 +70,7 @@ export default {
 	data () {
 		return {
 			prefix: 'vue-bigdata-table',
+			columnsCloned: [],
 			times0: 0, // 当前是第几轮
 			times1: 0,
 			times2: 0,
@@ -129,6 +130,7 @@ export default {
 			} : {};
 		},
 		cellNum () { // 表格列数
+			this.columnsCloned = this.columns;
 			return this.columns.length;
 		},
 		tableWidthStyles () {
