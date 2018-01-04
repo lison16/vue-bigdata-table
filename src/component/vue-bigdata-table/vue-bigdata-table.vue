@@ -3,7 +3,7 @@
 </style>
 
 <template>
-    <div :class="outerClasses">
+    <div :class="outerClasses" ref="outer">
         <div :class="wraperClasses" :style="tableWidthStyles">
             <div
                 :class="dataWraperClasses"
@@ -21,7 +21,7 @@
                             @mousedown="handleMousedown"
                             @mouseup="canNotMove"
                             @mouseleave="canNotMove">
-                            <th v-for="(col, i) in columnsWidthIndex" :data-index="i" :key="`table-title-${i}`">
+                            <th v-for="(col, i) in columnsHandled" :data-index="i" :key="`table-title-${i}`">
                                 <!-- <div :class="headerThInsideWraper"> -->
                                     <span v-if="!col.render">{{ col.title }}</span>
                                     <render-dom v-else :render="col.render" :back-value="showIndex ? (i - 1) : i"></render-dom>
@@ -78,7 +78,6 @@ export default {
 	data () {
 		return {
 			prefix: 'vue-bigdata-table',
-			columnsCloned: [],
 			times0: 0, // 当前是第几轮
 			times1: 0,
 			times2: 0,
@@ -95,8 +94,7 @@ export default {
 			isOnCellEdge: false, // 鼠标是否在表头的两个单元格之间的边框上
 			canMove: false,
 			initCellX: 0, // 用于计算鼠标移动的距离
-			scrollLeft: 0,
-			wraperWidthPersent: false // 用于标记tableWidthStyles的宽度是否是百分100
+			scrollLeft: 0
 		};
 	},
 	computed: {
@@ -138,9 +136,9 @@ export default {
 			} : {};
 		},
 		cellNum () { // 表格列数
-			return this.columnsWidthIndex.length;
+			return this.columnsHandled.length;
 		},
-		columnsWidthIndex () {
+		columnsHandled () {
 			let columns = [...this.columns];
 			if (this.showIndex) {
 				columns.unshift({
@@ -152,7 +150,7 @@ export default {
 			return columns;
 		},
 		tableWidthStyles () {
-			return this.wraperWidthPersent ? {width: this.tableWidth + 'px'} : {width: '100%'};
+			return {width: this.tableWidth + 'px'};
 		},
 		table1Data () {
 			let count = this.times0 * this.itemNum * 3;
@@ -190,10 +188,10 @@ export default {
 			let noWidthCellIndexArr = []; // 没有设置宽度的列的序列
 			let hasWidthCellTotalWidth = 0; // 设置了width的列一共多宽
 			while (i < len) {
-				if (this.columnsWidthIndex[i].width) {
+				if (this.columnsHandled[i].width) {
 					hasWidthCellCount++;
-					hasWidthCellTotalWidth += this.columnsWidthIndex[i].width;
-					cellWidthArr.push(this.columnsWidthIndex[i].width);
+					hasWidthCellTotalWidth += this.columnsHandled[i].width;
+					cellWidthArr.push(this.columnsHandled[i].width);
 				} else {
 					noWidthCellIndexArr.push(i);
 					cellWidthArr.push(0);
@@ -235,7 +233,7 @@ export default {
 					itemNum: this.itemNum,
 					rowStyles: this.rowStyles,
 					widthArr: this.widthArr,
-					columns: this.columnsWidthIndex,
+					columns: this.columnsHandled,
 					showIndex: this.showIndex
 				},
 				key: 'table-item-key' + index,
@@ -256,7 +254,7 @@ export default {
 		},
 		renderTable (h) {
 			return h('div', {
-				// style: this.tableWidthStyles
+				style: this.tableWidthStyles
 			}, this.getTables(h));
 		},
 		handleScroll (e) {
@@ -320,18 +318,18 @@ export default {
 		resize () {
 			this.$nextTick(() => {
 				this.updateHeight();
+				let outerWidth = this.getDomWidth(this.$refs.outer) - 2;
 				let width = this.cellWidth * this.columns.length + (this.showIndex ? this.indexWidth : 0);
-				this.tableWidth = width > this.getDomWidth(this.$refs.headerTable) ? width : this.getDomWidth(this.$refs.headerTable);
-				this.wraperWidthPersent = width > this.getDomWidth(this.$refs.headerTable);
+				this.tableWidth = width > outerWidth ? width : outerWidth;
 				this.widthArr = this.cellWidthArr;
 			});
 		}
 	},
 	watch: {
-		columns () {
+		columns (val) {
 			this.resize();
 		},
-		columnsWidthIndex () {
+		columnsHandled () {
 			this.resize();
 		},
 		cellWidth () {

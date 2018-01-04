@@ -9,7 +9,7 @@
         <tbody>
             <tr v-for="(tr, index) in itemData" :key="index">
                 <td v-if="showIndex" :class="['vue-bigdata-table-cell', 'vue-bigdata-table-data-table-center']">{{ indexBase + index + 1 }}</td>
-                <td v-for="(td, tdKey, i) in tr" :class="['vue-bigdata-table-cell', setAlign(i, td)]" :style="rowStyles" :key="tdKey">
+                <td v-for="(td, i) in tr" :class="['vue-bigdata-table-cell', setAlign(i)]" :style="rowStyles" :key="i">
                     <div v-if="!showCellRender[showIndex ? (i + 1) : i]" class="vue-bigdata-table-cell">{{ td }}</div>
                     <template v-else>
                         <render-dom :render="showCellRender[showIndex ? (i + 1) : i]" :back-value="backValue((indexBase + index), i)"></render-dom>
@@ -20,7 +20,6 @@
     </table>
 </template>
 <script>
-import { hasOneOf } from './util';
 import renderDom from './renderDom';
 export default {
 	name: 'ItemTable',
@@ -81,22 +80,10 @@ export default {
 				return this.$refs.itemTable.offsetWidth / this.columns.length;
 			}
 		},
-		setAlign (i, content) {
+		setAlign (i) {
 			i = this.showIndex ? i + 1 : i;
 			let col = this.columns[i];
-			let align = (col && col.align) ? col.align : false;
-			if (!align) {
-				if (typeof content === 'number' || (!isNaN(parseFloat(content)) && ('1' + content === parseFloat('1' + content).toString()))) {
-					align = 'right';
-				} else {
-					if (hasOneOf(content, [':', '年', '月', '日', '-', '：', '星期', '周'])) {
-						align = 'center';
-					} else {
-						align = 'left';
-					}
-				}
-			}
-			return this.prefix + '-' + align;
+			return this.prefix + '-' + col.align;
 		},
 		backValue (row, col) {
 			return {
