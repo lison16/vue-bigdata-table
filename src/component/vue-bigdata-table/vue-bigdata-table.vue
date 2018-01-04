@@ -85,7 +85,6 @@ export default {
 			itemNum: 50, // 一块数据显示的数据条数
 			moduleHeight: 0, // 三个tr块中的一块的高度
 			topPlaceholderHeight: 0, // 顶部占位容器高度
-			direction: 0, // 滚动方向 1 is down, 0 is up
 			tableWidth: 0,
 			widthArr: [], // 用于给数据表格传递列宽
 			/**
