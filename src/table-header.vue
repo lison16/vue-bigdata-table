@@ -1,6 +1,6 @@
 <template>
     <div>
-        <Poptip placement="bottom" width="200" transfer>
+        <!-- <Poptip placement="bottom" width="200" transfer>
             <a href="javascript:void(0)">
                 {{ title }}
                 <Icon type="arrow-down-b"></Icon>
@@ -21,7 +21,7 @@
 				<p>数值/文本搜索</p>
 				<Input />
 				<div class="value-list-con">
-					<CheckboxGroup>
+					<CheckboxGroup> -->
 						<!-- <p v-for="(value, i) in noRepeatList" :key="i">
 							<Checkbox :label="value"></Checkbox>
 						</p> -->
@@ -32,10 +32,10 @@
 								</p>
 							</template>
 						</virtual-scroller> -->
-					</CheckboxGroup>
+					<!-- </CheckboxGroup>
 				</div>
 			</div>
-        </Poptip>
+        </Poptip> -->
     </div>
 </template>
 <script>

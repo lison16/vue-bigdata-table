@@ -73,6 +73,12 @@ export default {
 		indexWidth: {
 			type: Number,
 			default: 100
+		},
+		indexRender: {
+			type: Function,
+			default: (h, index) => {
+				return h('span', index + 1);
+			}
 		}
 	},
 	data () {
@@ -233,7 +239,8 @@ export default {
 					rowStyles: this.rowStyles,
 					widthArr: this.widthArr,
 					columns: this.columnsHandled,
-					showIndex: this.showIndex
+					showIndex: this.showIndex,
+					indexRender: this.indexRender
 				},
 				key: 'table-item-key' + index,
 				ref: 'itemTable' + index

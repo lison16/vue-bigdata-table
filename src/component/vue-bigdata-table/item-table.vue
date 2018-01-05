@@ -8,9 +8,12 @@
         </colgroup>
         <tbody>
             <tr v-for="(tr, index) in itemData" :key="index">
-                <td v-if="showIndex" :class="['vue-bigdata-table-cell', 'vue-bigdata-table-data-table-center']">{{ indexBase + index + 1 }}</td>
-                <td v-for="(td, i) in tr" :class="['vue-bigdata-table-cell', setAlign(i)]" :style="rowStyles" :key="i">
-                    <div v-if="!showCellRender[showIndex ? (i + 1) : i]" class="vue-bigdata-table-cell">{{ td }}</div>
+                <td v-if="showIndex" :class="['vue-bigdata-table-cell', 'vue-bigdata-table-data-table-center']">
+					<!-- <span>{{ indexBase + index + 1 }}</span> -->
+					<render-dom :render="indexRender" :back-value="(indexBase + index)"></render-dom>
+				</td>
+                <td v-for="(td, i) in tr" :class="['vue-bigdata-table-cell', setAlign(i), typeof td === 'object' ? td.className : '', (tr.className && !td.className) ? tr.className : '']" :style="rowStyles" :key="i">
+                    <div v-if="!showCellRender[showIndex ? (i + 1) : i]" class="vue-bigdata-table-cell">{{ typeof td === 'object' ? td.value : td }}</div>
                     <template v-else>
                         <render-dom :render="showCellRender[showIndex ? (i + 1) : i]" :back-value="backValue((indexBase + index), i)"></render-dom>
                     </template>
@@ -40,7 +43,8 @@ export default {
 		widthArr: Array,
 		columns: Array,
 		itemNum: Number,
-		showIndex: Boolean
+		showIndex: Boolean,
+		indexRender: Function
 	},
 	computed: {
 		dataTableClasses () {

@@ -9,7 +9,11 @@ export const hasOneOf = (str, targetArr) => {
 	return false;
 };
 
-export const handleData = (data, precision) => {
+export const handleData = (data, precision, minListLength) => {
+	/*
+	 * precision: 辨别经纬度和数据类型的遍历次数
+	 * minListLength: 筛选菜单选项显示个数
+	*/
 	let headers = data.headers;
 	let rows = data.rows;
 	let len = rows.length; // 总共几列
@@ -39,21 +43,24 @@ export const handleData = (data, precision) => {
 			date: 0
 		};
 		while (j < colLen) { // 遍历一列数据
-			let value = col[j];
+			let valueInit = col[j];
+			let value = typeof col[j] === 'object' ? col[j].value : col[j];
 			// 整理数据
 			if (i === 0) {
 				resData.push([]);
 			}
-			resData[j][i] = value;
+			resData[j][i] = valueInit;
 			// 识别经纬度
 			if (value) {
 				if (!isNaN(value)) {
-					if (parseFloat(value) >= 3.86 && parseFloat(value) <= 53.55 && value.indexOf('.') >= 0) { // 如果当前值在纬度范围内
-						latRes[i] = latRes[i] || 0 + 1;
-						maxLatNum = Math.max(latRes[i], maxLatNum);
-					} else if (parseFloat(value) >= 73.66 && parseFloat(value) <= 135.05 && value.indexOf('.') >= 0) {
-						lngRes[i] = lngRes[i] || 0 + 1;
-						maxLngNum = Math.max(lngRes[i], maxLngNum);
+					if (j < precision) {
+						if (parseFloat(value) >= 3.86 && parseFloat(value) <= 53.55 && value.indexOf('.') >= 0) { // 如果当前值在纬度范围内
+							latRes[i] = latRes[i] || 0 + 1;
+							maxLatNum = Math.max(latRes[i], maxLatNum);
+						} else if (parseFloat(value) >= 73.66 && parseFloat(value) <= 135.05 && value.indexOf('.') >= 0) {
+							lngRes[i] = lngRes[i] || 0 + 1;
+							maxLngNum = Math.max(lngRes[i], maxLngNum);
+						}
 					}
 					store.number += 1;
 				} else {
@@ -67,7 +74,7 @@ export const handleData = (data, precision) => {
 					}
 				}
 			}
-			// 排重
+			// 排重 && removeRepeatedArr[i].length < minListLength
 			if (removeRepeatedArr[i].indexOf(value) < 0) {
 				removeRepeatedArr[i].push(value);
 			}

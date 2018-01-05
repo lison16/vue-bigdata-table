@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <div class="wraper">
-      <bigdata-table show-index :cell-width="200" :header-height="80" fixed v-model="tableData" :columns="columns"></bigdata-table>
+      <bigdata-table show-index :cell-width="200" :header-height="80" fixed v-model="tableData" :columns="columns" :index-render="indexRender"></bigdata-table>
     </div>
   </div>
 </template>
@@ -18,8 +18,16 @@ export default {
 	data () {
 		return {
 			tableData: [],
-			columns: []
+			columns: [],
+			tableDataHandled: []
 		};
+	},
+	methods: {
+		indexRender (h, index) {
+			return h('div', {
+				'class': index === 3 ? 'unormal-index' : ''
+			}, index + 1);
+		}
 	},
 	mounted () {
 		let data = {};
@@ -27,7 +35,7 @@ export default {
 		let dataNum = 1000;
 		console.time('getData');
 		for (let i = 0; i < dataNum; i++) {
-			dataArr.push([
+			let arr = [
 				i + '00',
 				'count' + i,
 				'23.4534534345',
@@ -35,7 +43,23 @@ export default {
 				'123.234534534534',
 				'namenasdfsdfsdfsdfssdfsdfsdsdfsdfsf' + i,
 				'2014年1月1日'
-			]);
+			];
+			if (i === 3) {
+				arr = arr.map((item, index) => {
+					if (index === 2) {
+						return {
+							value: item,
+							className: 'unormal-value'
+						};
+					} else {
+						return {
+							value: item,
+							className: 'unormal-row'
+						};
+					}
+				});
+			}
+			dataArr.push(arr);
 		}
 		this.tableData = dataArr;
 		let rows = [];
@@ -55,7 +79,7 @@ export default {
 			headers: ['这是数字', '这是字符1列', '这是纬度', '这是数字', '这是经度', '这是字符2列', '这是时间']
 		};
 		console.time('handleData');
-		let res = handleData(data, 50);
+		let res = handleData(data, 50, 10);
 		console.timeEnd('handleData');
 
 		console.time('getColumns');
@@ -87,7 +111,7 @@ export default {
 								props: {
 									title: title,
 									col: col,
-									type: res.type[col],
+									align: this.columns[col].align,
 									noRepeatList: res.minList[col]
 								},
 								on: {
@@ -95,6 +119,16 @@ export default {
 										let header = this.columns.splice(col, 1);
 										header[0].align = type;
 										this.columns.splice(col, 0, ...header);
+									},
+									onSearch: (col, val) => {
+										this.tableDataHandled = res.data.filter(item => {
+											return item[col].indexOf(val) >= 0;
+										});
+									},
+									onFilter: (col, arr) => {
+										this.tableDataHandled = res.data.filter(item => {
+											return arr.indexOf(item[col]) >= 0;
+										});
 									}
 								}
 							})
@@ -105,7 +139,7 @@ export default {
 			};
 		});
 		columns.forEach((item, index) => {
-			if (index === 2) {
+			if (index === 3) {
 				item.cellRender = (h, res) => {
 					return h('Button', {
 						on: {
@@ -121,10 +155,8 @@ export default {
 			}
 		});
 		console.timeEnd('getColumns');
-		console.time('draw');
 		this.columns = columns;
-		this.tableData = res.data;
-		console.timeEnd('drwa');
+		this.tableDataHandled = res.data;
 	}
 };
 </script>
