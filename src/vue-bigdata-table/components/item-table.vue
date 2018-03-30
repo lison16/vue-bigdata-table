@@ -1,6 +1,6 @@
 <template>
 	<div class="vue-bigdata-table-item-table">
-		<table v-show="showTable && fixedCell >= 0" class="vue-bigdata-table-data-table vue-bigdata-table-fixed-table" :style="fixedCellStyles" cellspacing="0" cellpadding="0" border="0">
+		<table v-show="showTable && fixedCell >= 0" :class="['vue-bigdata-table-data-table', 'vue-bigdata-table-fixed-table', showFixedBoxShadow ? 'box-shdow' : '']" :style="fixedCellStyles" cellspacing="0" cellpadding="0" border="0">
 			<colgroup>
 				<col
 					:width="width" v-for="(width, i) in widthArr"
@@ -19,11 +19,14 @@
 					<td v-if="showIndex" :class="['vue-bigdata-table-cell', 'vue-bigdata-table-data-table-center']" style="position: sticky;">
 						<render-dom :render="indexRender" :back-value="(indexBase + index)"></render-dom>
 					</td>
-					<td v-if="i <= fixedCellCom" @click="handleClickTd(indexBase + index, i)" v-for="(td, i) in tr" :class="['vue-bigdata-table-cell', setAlign(i), typeof td === 'object' ? td.className : '']" :style="rowStyles" :key="i">
-						<div v-if="!showCellRender[showIndex ? (i + 1) : i]" class="vue-bigdata-table-cell">{{ typeof td === 'object' ? td.value : td }}</div>
-						<template v-else>
-							<render-dom :render="showCellRender[showIndex ? (i + 1) : i]" :back-value="{row: indexBase + index, col: i}"></render-dom>
+					<td v-if="i <= fixedCellCom" @click="handleClickTd(indexBase + index, i)" @dblclick="handleDblclickTd(indexBase + index, i, typeof td === 'object' ? td.value : td)" v-for="(td, i) in tr" :class="['vue-bigdata-table-cell', setAlign(i), typeof td === 'object' ? td.className : '']" :style="rowStyles" :key="i">
+						<template v-if="!canEdit || (canEdit && `${indexBase + index}-${i}` !== edittingTd)">
+							<div v-if="!showCellRender[showIndex ? (i + 1) : i]" class="vue-bigdata-table-cell">{{ typeof td === 'object' ? td.value : td }}</div>
+							<template v-else>
+								<render-dom :render="showCellRender[showIndex ? (i + 1) : i]" :back-value="{row: indexBase + index, col: i}"></render-dom>
+							</template>
 						</template>
+						<render-dom v-else :render="editCellRender" :back-value="{row: indexBase + index, col: i, value: typeof td === 'object' ? td.value : td, beforeSave}"></render-dom>
 					</td>
 				</tr>
 			</tbody>
@@ -47,13 +50,14 @@
 					<td v-if="showIndex" :class="['vue-bigdata-table-cell', 'vue-bigdata-table-data-table-center']">
 						<render-dom v-if="fixedCell < 0" :render="indexRender" :back-value="(indexBase + index)"></render-dom>
 					</td>
-					<td v-for="(td, i) in tr" @click="handleClickTd(indexBase + index, i)" @dblclick="handleDblclickTd(indexBase + index, i)" :class="['vue-bigdata-table-cell', setAlign(i), typeof td === 'object' ? td.className : '']" :style="rowStyles" :key="i">
-						<template v-if="`${indexBase + index}-${i}` !== edittingTd && !canEdit">
+					<td v-for="(td, i) in tr" @click="handleClickTd(indexBase + index, i)" @dblclick="handleDblclickTd(indexBase + index, i, typeof td === 'object' ? td.value : td)" :class="['vue-bigdata-table-cell', setAlign(i), typeof td === 'object' ? td.className : '']" :style="rowStyles" :key="i">
+						<template v-if="!canEdit || (canEdit && `${indexBase + index}-${i}` !== edittingTd)">
 							<div v-if="(!showCellRender[showIndex ? (i + 1) : i]) && (i >= fixedCell)" class="vue-bigdata-table-cell">{{ typeof td === 'object' ? td.value : td }}</div>
 							<template v-else-if="i >= fixedCell">
 								<render-dom :render="showCellRender[showIndex ? (i + 1) : i]" :back-value="{row: indexBase + index, col: i}"></render-dom>
 							</template>
 						</template>
+						<render-dom v-else :render="editCellRender" :back-value="{row: indexBase + index, col: i, value: typeof td === 'object' ? td.value : td, beforeSave}"></render-dom>
 					</td>
 				</tr>
 			</tbody>
@@ -71,7 +75,8 @@ export default {
 		return {
 			prefix: 'vue-bigdata-table-data-table',
 			tableWidth: 0,
-			currentMouseEnterIndex: -1
+			currentMouseEnterIndex: -1,
+			editInputValue: ''
 		};
 	},
 	props: {
@@ -89,7 +94,10 @@ export default {
 		currentScrollToRowIndex: Number,
 		canEdit: Boolean,
 		edittingTd: String,
-		startEditType: String
+		startEditType: String,
+		showFixedBoxShadow: Boolean,
+		editCellRender: Function,
+		beforeSave: Function
 	},
 	computed: {
 		showTable () {
@@ -110,7 +118,7 @@ export default {
 			return {
 				position: 'sticky',
 				left: 0,
-				zIndex: 800
+				zIndex: 60
 			};
 		},
 		fixedCellCom () {
@@ -145,7 +153,8 @@ export default {
 		editCell (row, col) {
 			this.$emit('on-edit-cell', row, col);
 		},
-		handleDblclickTd (row, col) {
+		handleDblclickTd (row, col, value) {
+			this.editInputValue = value;
 			if (this.canEdit && this.startEditType === 'dblclick') this.editCell(row, col);
 		}
 	}

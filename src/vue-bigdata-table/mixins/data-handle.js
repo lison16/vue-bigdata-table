@@ -10,7 +10,8 @@ export default {
 			table3Data: [],
 			currentIndex: 1, // 当前展示的表格是第几个
 			itemNum: 0, // 一块数据显示的数据条数
-			timer: null
+			timer: null,
+			scrollLeft: 0
 		};
 	},
 	computed: {
@@ -31,7 +32,9 @@ export default {
 	},
 	methods: {
 		handleScroll (e) {
-			let scrollTop = e.srcElement.scrollTop;
+			let ele = e.srcElement;
+			let { scrollTop, scrollLeft } = ele;
+			this.scrollLeft = scrollLeft;
 			// let direction = (scrollTop - this.scrollTop) > 0 ? 1 : ((scrollTop - this.scrollTop) < 0 ? -1 : 0); // 1 => down  -1 => up  0 => stop
 			this.currentIndex = parseInt(((scrollTop + this.moduleHeight) % (this.moduleHeight * 3)) / this.moduleHeight);
 			this.scrollTop = scrollTop;
@@ -73,7 +76,10 @@ export default {
 					currentScrollToRowIndex: this.currentScrollToRowIndex,
 					canEdit: this.canEdit,
 					edittingTd: this.edittingTd,
-					startEditType: this.startEditType
+					startEditType: this.startEditType,
+					showFixedBoxShadow: this.showFixedBoxShadow,
+					editCellRender: this.editCellRender,
+					beforeSave: this.beforeSave
 				},
 				on: {
 					'on-click-tr': (index) => {
@@ -84,19 +90,33 @@ export default {
 					},
 					'on-edit-cell': (row, col) => {
 						this.edittingTd = `${row}-${col}`;
+					},
+					'on-success-save': ({ row, col, value }) => {
+						let data = [...this.value];
+						data[row][col] = value;
+						this.$emit('input', data);
+						this.$emit('on-success-save', { row, col, value });
+						this.edittingTd = '';
+					},
+					'on-fail-save': ({ row, col, value }) => {
+						this.$emit('on-fail-save', { row, col, value });
+					},
+					'on-cancel-edit': () => {
+						this.edittingTd = '';
 					}
 				},
 				key: 'table-item-key' + index,
 				ref: 'itemTable' + index
 			});
 		},
-		scrollToIndexRow (index) {
-			if (index > this.value.length || index <= 0) return;
-			let scrollTop = (index - 1) * this.itemRowHeight;
+		_scrollToIndexRow (index) {
+			index = parseInt(index);
+			if (isNaN(index) || index >= this.value.length || index < 0) return;
+			let scrollTop = index * this.itemRowHeight;
 			this.scrollTop = scrollTop;
 			this.currentIndex = parseInt(((scrollTop + this.moduleHeight) % (this.moduleHeight * 3)) / this.moduleHeight);
 			this.$refs.outer.scrollTop = this.scrollTop;
-			this.currentScrollToRowIndex = index - 1;
+			this.currentScrollToRowIndex = index;
 			clearTimeout(this.timer);
 			this.timer = setTimeout(() => {
 				this.currentScrollToRowIndex = -1;

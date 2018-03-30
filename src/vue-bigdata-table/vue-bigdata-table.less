@@ -5,7 +5,7 @@
 		background: #fff;
 	}
 	50% {
-		background: #5cadff;
+		background: #d0e8ff;
 	}
 }
 
@@ -19,7 +19,7 @@
         position: relative;
         .@{prefix}-header-wrapper{
             box-sizing: border-box;
-            z-index: 999;
+            z-index: 70;
             table{
                 table-layout: fixed;
                 height: 100%;
@@ -47,8 +47,12 @@
         position: sticky;
         transform: translateX(0);
         left: 0;
-        z-index:1000;
-        box-shadow: 2px 0 6px -2px rgba(0,0,0,.2);
+        z-index:110;
+				transition: box-shadow .2s ease;
+				&.box-shdow{
+					box-shadow: 2px 0 6px -2px rgba(0,0,0,.2);
+					transition: box-shadow .2s ease;
+				}
     }
 
     width: 100%;
@@ -71,7 +75,7 @@
         }
         .@{prefix}-data-table{
             &.@{prefix}-content-table{
-                
+
                 left: 0;
                 top: 0;
             }
@@ -80,9 +84,6 @@
             table-layout: fixed;
             tr{
                 background: #fff;
-                // &:hover td{
-                //     background-color:#ebf7ff !important;
-                // }
                 &.scroll-to-row-tip{
                     animation: scroll-tip .6s 3;
                 }
@@ -106,6 +107,25 @@
                     &:last-child{
                         border-right: none;
                     }
+										.edit-item-con{
+											width: 100%;
+											text-align: left;
+											padding: 0 6px;
+											box-sizing: border-box;
+											.edit-item{
+												&-input{
+													width: ~"calc(100% - 50px)";
+													float: left;
+												}
+												&-btn-con{
+													float: left;
+													.edit-btn{
+														width: 20px;
+														margin-top: 4px;
+													}
+												}
+											}
+										}
                 }
                 &.stripe-gray{
                     background: #f8f8f9;
@@ -132,7 +152,11 @@
     }
 
     &-fixed-table{
-        box-shadow: 2px 0 6px -2px rgba(0,0,0,.2);
+				transition: box-shadow .2s ease;
+				&.box-shdow{
+					box-shadow: 2px 0 6px -2px rgba(0,0,0,.2);
+					transition: box-shadow .2s ease;
+				}
         td{
             border-right: 1px solid #e9eaec !important;
         }

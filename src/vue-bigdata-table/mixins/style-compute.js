@@ -31,6 +31,9 @@ export default {
 				transform: 'translateX(0)'
 			};
 		},
+		showFixedBoxShadow () {
+			return this.scrollLeft !== 0;
+		},
 		tableWidthStyles () {
 			return {width: this.tableWidth + 'px'};
 		},
@@ -73,7 +76,7 @@ export default {
 		}
 	},
 	methods: {
-		tableResize () {
+		_tableResize () {
 			this.$nextTick(() => {
 				this.updateHeight();
 				let scrollBarWidth = this.totalRowHeight > this.wrapperHeight ? getScrollbarWidth() : 0;

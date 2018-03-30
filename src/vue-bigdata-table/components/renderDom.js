@@ -6,6 +6,6 @@ export default {
 		backValue: [Number, Object]
 	},
 	render: (h, ctx) => {
-		return ctx.props.render(h, ctx.props.backValue);
+		return ctx.props.render(h, ctx.props.backValue, ctx.parent);
 	}
 };
