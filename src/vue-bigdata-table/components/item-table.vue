@@ -1,6 +1,6 @@
 <template>
 	<div class="vue-bigdata-table-item-table">
-		<table v-show="showTable && fixedCell >= 0" :class="['vue-bigdata-table-data-table', 'vue-bigdata-table-fixed-table', showFixedBoxShadow ? 'box-shdow' : '']" :style="fixedCellStyles" cellspacing="0" cellpadding="0" border="0">
+		<table v-show="showTable && fixedCol >= 0" @paste="handlePaste" :class="['vue-bigdata-table-data-table', 'vue-bigdata-table-fixed-table', showFixedBoxShadow ? 'box-shdow' : '']" :style="fixedColStyles" cellspacing="0" cellpadding="0" border="0">
 			<colgroup>
 				<col
 					:width="width" v-for="(width, i) in widthArr"
@@ -11,7 +11,7 @@
 				<tr
 					v-for="(tr, index) in itemData"
 					:key="index"
-					:style="{background: currentMouseEnterIndex === index ? '#ebf7ff' : ''}"
+					:style="{background: currentMouseEnterIndex === index && canSelectText ? '#ebf7ff' : ''}"
 					:class="[stripe && (indexBase + index) % 2 !== 0 ? 'stripe-gray' : '', tr.className, currentScrollToRowIndex === indexBase + index ? 'scroll-to-row-tip' : '']"
 					@click="handleClickTr(indexBase + index)"
 					@mouseenter.stop="handleMouseIn(index)"
@@ -19,7 +19,19 @@
 					<td v-if="showIndex" :class="['vue-bigdata-table-cell', 'vue-bigdata-table-data-table-center']" style="position: sticky;">
 						<render-dom :render="indexRender" :back-value="(indexBase + index)"></render-dom>
 					</td>
-					<td v-if="i <= fixedCellCom" @click="handleClickTd(indexBase + index, i)" @dblclick="handleDblclickTd(indexBase + index, i, typeof td === 'object' ? td.value : td)" v-for="(td, i) in tr" :class="['vue-bigdata-table-cell', setAlign(i), typeof td === 'object' ? td.className : '']" :style="rowStyles" :key="i">
+					<td
+						v-if="i <= fixedColCom"
+						:data-row="indexBase + index"
+						:data-col="i"
+						@click="handleClickTd(indexBase + index, i)"
+						@dblclick="handleDblclickTd(indexBase + index, i, typeof td === 'object' ? td.value : td)"
+						v-for="(td, i) in tr"
+						:class="['vue-bigdata-table-cell',
+											setAlign(i),
+											typeof td === 'object' ? td.className : '',
+											getSelectCellClasses(indexBase + index, i)
+										]"
+						:style="rowStyles" :key="i">
 						<template v-if="!canEdit || (canEdit && `${indexBase + index}-${i}` !== edittingTd)">
 							<div v-if="!showCellRender[showIndex ? (i + 1) : i]" class="vue-bigdata-table-cell">{{ typeof td === 'object' ? td.value : td }}</div>
 							<template v-else>
@@ -31,7 +43,7 @@
 				</tr>
 			</tbody>
 		</table>
-		<table v-show="showTable" ref="itemTable" class="vue-bigdata-table-data-table vue-bigdata-table-content-table" :style="{position: fixedCell < 0 ? '' : 'absolute'}" cellspacing="0" cellpadding="0" border="0" width="100%">
+		<table v-show="showTable" @paste="handlePaste" ref="itemTable" class="vue-bigdata-table-data-table vue-bigdata-table-content-table" :style="{position: fixedCol < 0 ? '' : 'absolute'}" cellspacing="0" cellpadding="0" border="0" width="100%">
 			<colgroup>
 				<col
 					:width="width" v-for="(width, i) in widthArr"
@@ -45,15 +57,27 @@
 					@click="handleClickTr(indexBase + index)"
 					@mouseenter.stop="handleMouseIn(index)"
 					@mouseleave.stop="handleMouseLeave"
-					:style="{background: currentMouseEnterIndex === index ? '#ebf7ff' : ''}"
+					:style="{background: currentMouseEnterIndex === index && canSelectText ? '#ebf7ff' : ''}"
 					:class="[stripe && (indexBase + index) % 2 !== 0 ? 'stripe-gray' : '', tr.className, currentScrollToRowIndex === indexBase + index ? 'scroll-to-row-tip' : '']">
 					<td v-if="showIndex" :class="['vue-bigdata-table-cell', 'vue-bigdata-table-data-table-center']">
-						<render-dom v-if="fixedCell < 0" :render="indexRender" :back-value="(indexBase + index)"></render-dom>
+						<render-dom v-if="fixedCol < 0" :render="indexRender" :back-value="(indexBase + index)"></render-dom>
 					</td>
-					<td v-for="(td, i) in tr" @click="handleClickTd(indexBase + index, i)" @dblclick="handleDblclickTd(indexBase + index, i, typeof td === 'object' ? td.value : td)" :class="['vue-bigdata-table-cell', setAlign(i), typeof td === 'object' ? td.className : '']" :style="rowStyles" :key="i">
+					<td
+						v-for="(td, i) in tr"
+						:data-row="indexBase + index"
+						:data-col="i"
+						@click="handleClickTd(indexBase + index, i)"
+						@dblclick="handleDblclickTd(indexBase + index, i, typeof td === 'object' ? td.value : td)"
+						:class="['vue-bigdata-table-cell',
+											setAlign(i),
+											typeof td === 'object' ? td.className : '',
+											getSelectCellClasses(indexBase + index, i)
+										]"
+						:style="rowStyles"
+						:key="i">
 						<template v-if="!canEdit || (canEdit && `${indexBase + index}-${i}` !== edittingTd)">
-							<div v-if="(!showCellRender[showIndex ? (i + 1) : i]) && (i >= fixedCell)" class="vue-bigdata-table-cell">{{ typeof td === 'object' ? td.value : td }}</div>
-							<template v-else-if="i >= fixedCell">
+							<div v-if="(!showCellRender[showIndex ? (i + 1) : i]) && (i >= fixedCol)" class="vue-bigdata-table-cell">{{ typeof td === 'object' ? td.value : td }}</div>
+							<template v-else-if="i >= fixedCol">
 								<render-dom :render="showCellRender[showIndex ? (i + 1) : i]" :back-value="{row: indexBase + index, col: i}"></render-dom>
 							</template>
 						</template>
@@ -90,14 +114,18 @@ export default {
 		showIndex: Boolean,
 		indexRender: Function,
 		stripe: Boolean,
-		fixedCell: Number,
+		fixedCol: Number,
 		currentScrollToRowIndex: Number,
 		canEdit: Boolean,
 		edittingTd: String,
 		startEditType: String,
 		showFixedBoxShadow: Boolean,
 		editCellRender: Function,
-		beforeSave: Function
+		beforeSave: Function,
+		canSelectText: Boolean,
+		startSelect: Object,
+		endSelect: Object,
+		disabledHover: Boolean
 	},
 	computed: {
 		showTable () {
@@ -114,15 +142,15 @@ export default {
 		baseIndex () {
 			return this.showIndex ? 1 : 0;
 		},
-		fixedCellStyles () {
+		fixedColStyles () {
 			return {
 				position: 'sticky',
 				left: 0,
 				zIndex: 60
 			};
 		},
-		fixedCellCom () {
-			return this.showIndex ? (this.fixedCell - 1) : this.fixedCell;
+		fixedColCom () {
+			return this.showIndex ? (this.fixedCol - 1) : this.fixedCol;
 		}
 	},
 	methods: {
@@ -139,6 +167,7 @@ export default {
 			};
 		},
 		handleMouseIn (index) {
+			if (!this.disabledHover) return;
 			this.currentMouseEnterIndex = index;
 		},
 		handleMouseLeave () {
@@ -156,6 +185,30 @@ export default {
 		handleDblclickTd (row, col, value) {
 			this.editInputValue = value;
 			if (this.canEdit && this.startEditType === 'dblclick') this.editCell(row, col);
+		},
+		getSelectCellClasses (row, col) {
+			let startSelect = this.startSelect;
+			let endSelect = this.endSelect;
+			let startRow = parseInt(startSelect['row']);
+			let endRow = parseInt(endSelect['row']);
+			let startCol = parseInt(startSelect['col']);
+			return [
+				((startRow === row) && startCol === col) ? 'start-select-cell' : '',
+				((endRow === row) && endSelect['col'] === col) ? 'end-select-cell' : '',
+				((startRow === row) && endSelect['col'] === col) ? 'right-top-select-cell' : '',
+				((endRow === row) && startCol === col) ? 'left-bottom-select-cell' : '',
+				((startRow === row) && col > startCol && col < endSelect['col']) ? 'top-center-select-cell' : '',
+				((endRow === row) && col > startCol && col < endSelect['col']) ? 'bottom-center-select-cell' : '',
+				(startCol === col && row > startRow && row < endRow) ? 'left-center-select-cell' : '',
+				(endSelect['col'] === col && row > startRow && row < endRow) ? 'right-center-select-cell' : ''
+			];
+		},
+		handlePaste (e) {
+			const data = e.clipboardData.getData('text/plain');
+			const rowsData = data.split((/[\n\u0085\u2028\u2029]|\r\n?/g)).map((row) => {
+        return row.split('\t');
+			});
+			this.$emit('on-paste', rowsData);
 		}
 	}
 };

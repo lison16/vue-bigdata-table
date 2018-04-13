@@ -1,3 +1,0 @@
-<template>
-	<input class="" >
-</template>

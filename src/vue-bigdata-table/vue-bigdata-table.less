@@ -1,4 +1,5 @@
 @prefix: ~"vue-bigdata-table";
+@select-border-color: #3695FE;
 
 @keyframes scroll-tip{
 	0% {
@@ -65,6 +66,14 @@
         .@{prefix}-content{
             width: 100%;
             height: auto;
+						&.noselect-text{
+							-webkit-touch-callout: none;
+							-webkit-user-select: none;
+							-khtml-user-select: none;
+							-moz-user-select: none;
+							-ms-user-select: none;
+							user-select: none;
+						}
         }
 
         &:nth-child(2){
@@ -96,6 +105,9 @@
                     vertical-align: middle;
                     border-bottom: 1px solid #e9eaec;
                     border-right: 1px solid #e9eaec;
+
+										border-left: 1px solid transparent;
+                    border-top: 1px solid transparent;    // 表格选中
                     .@{prefix}-cell{
                         box-sizing: border-box;
                         padding: 0 18px;
@@ -104,9 +116,9 @@
                         white-space: nowrap;
                         word-break: break-all;
                     }
-                    &:last-child{
-                        border-right: none;
-                    }
+                    // &:last-child{
+                    //     border-right: none;
+                    // }
 										.edit-item-con{
 											width: 100%;
 											text-align: left;
@@ -125,6 +137,34 @@
 													}
 												}
 											}
+										}
+										&.start-select-cell{
+											border-left: 1px solid @select-border-color;
+											border-top: 1px solid @select-border-color;
+										}
+										&.end-select-cell{
+											border-right: 1px solid @select-border-color;
+											border-bottom: 1px solid @select-border-color;
+										}
+										&.right-top-select-cell{
+											border-right: 1px solid @select-border-color;
+											border-top: 1px solid @select-border-color;
+										}
+										&.left-bottom-select-cell{
+											border-left: 1px solid @select-border-color;
+											border-bottom: 1px solid @select-border-color;
+										}
+										&.top-center-select-cell{
+											border-top: 1px solid @select-border-color;
+										}
+										&.bottom-center-select-cell{
+											border-bottom: 1px solid @select-border-color;
+										}
+										&.left-center-select-cell{
+											border-left: 1px solid @select-border-color;
+										}
+										&.right-center-select-cell{
+											border-right: 1px solid @select-border-color;
 										}
                 }
                 &.stripe-gray{
@@ -152,13 +192,13 @@
     }
 
     &-fixed-table{
-				transition: box-shadow .2s ease;
-				&.box-shdow{
-					box-shadow: 2px 0 6px -2px rgba(0,0,0,.2);
-					transition: box-shadow .2s ease;
-				}
+        transition: box-shadow .2s ease;
+        &.box-shdow{
+            box-shadow: 2px 0 6px -2px rgba(0,0,0,.2);
+            transition: box-shadow .2s ease;
+        }
         td{
-            border-right: 1px solid #e9eaec !important;
+            border-right: 1px solid #e9eaec;
         }
     }
 
@@ -166,3 +206,4 @@
         position: relative;
     }
 }
+
