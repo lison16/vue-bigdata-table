@@ -52,17 +52,58 @@ export default {
 			return this.rowHeight === undefined ? 48 : this.rowHeight;
 		},
 		colWidthArr () {
+			// let len = this.cellNum;
+			// let i = -1;
+			// let colWidthArr = [];
+			// while (++i < len) {
+			// 	if (this.columnsHandled[i].width) {
+			// 		colWidthArr.push(this.columnsHandled[i].width);
+			// 	} else {
+			// 		colWidthArr.push(this.colWidth);
+			// 	}
+			// }
+			// this.widthArr = colWidthArr;
+			// return colWidthArr;
 			let len = this.cellNum;
-			let i = -1;
 			let colWidthArr = [];
-			while (++i < len) {
-				if (this.columnsHandled[i].width) {
-					colWidthArr.push(this.columnsHandled[i].width);
-				} else {
-					colWidthArr.push(this.colWidth);
+			if (this.fixedWrapperWidth) {
+				let width = this.outerWidth;
+				let num = this.cellNum;
+				if (this.showIndex) {
+					colWidthArr.push(this.indexWidth);
+					width -= this.indexWidth;
+					num -= 1;
 				}
+				let i = -1;
+				let itemColWidth = width / num;
+				while (++i < num) {
+					colWidthArr.push(itemColWidth);
+				}
+			} else {
+				let i = 0;
+				let hasWidthCellCount = 0; // 统计设置了width的列的数量，从而为没有设置width的列分配宽度
+				let noWidthCellIndexArr = []; // 没有设置宽度的列的序列
+				let hasWidthCellTotalWidth = 0; // 设置了width的列一共多宽
+				while (i < len) {
+					if (this.columnsHandled[i].width) {
+						hasWidthCellCount++;
+						hasWidthCellTotalWidth += this.columnsHandled[i].width;
+						colWidthArr.push(this.columnsHandled[i].width);
+					} else {
+						noWidthCellIndexArr.push(i);
+						colWidthArr.push(0);
+					}
+					i++;
+				}
+				let noWidthCellWidth = (this.tableWidth - hasWidthCellTotalWidth) / (len - hasWidthCellCount);
+				let w = 0;
+				let indexArrLen = noWidthCellIndexArr.length;
+				while (w < indexArrLen) {
+					colWidthArr[noWidthCellIndexArr[w]] = noWidthCellWidth;
+					w++;
+				}
+				this.widthArr = colWidthArr;
 			}
-			this.widthArr = colWidthArr;
 			return colWidthArr;
 		},
 		cursorOnHeader () {
@@ -77,8 +118,8 @@ export default {
 				let scrollBarWidth = this.totalRowHeight > this.wrapperHeight ? getScrollbarWidth() : 0;
 				this.outerWidth = this.$refs.outer.offsetWidth - 2 - scrollBarWidth;
 				let width = this.colWidth * this.columns.length + (this.showIndex ? this.indexWidthInside : 0);
-				// console.log(width > outerWidth)
-				this.tableWidth = width > this.outerWidth ? width : this.outerWidth;
+				// this.tableWidth = width > this.outerWidth ? width : this.outerWidth;
+				this.tableWidth = this.fixedWrapperWidth ? this.outerWidth : (width > this.outerWidth ? width : this.outerWidth);
 				if (width < this.outerWidth) this._setColWidthArr();
 				// this.widthArr = this.colWidthArr;
 			});

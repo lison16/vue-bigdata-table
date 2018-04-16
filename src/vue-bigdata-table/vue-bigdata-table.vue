@@ -91,6 +91,13 @@ export default {
 			default: false
 		},
 		/**
+		 * @description 设为true后表格列宽总是平分容器宽度减去indexWidth后的宽度
+		 */
+		fixedWrapperWidth: {
+			type: Boolean,
+			default: false
+		},
+		/**
 		 * @description 是否取消鼠标悬浮高亮效果
 		 */
 		disabledHover: {
