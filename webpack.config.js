@@ -7,7 +7,7 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, './dist'),
     publicPath: '/dist/',
-    filename: 'vue-bigdata-table.min.js'
+    filename: process.env.NODE_ENV === 'production' ? 'vue-bigdata-table.min.js' : 'build.js'
   },
   module: {
     rules: [
