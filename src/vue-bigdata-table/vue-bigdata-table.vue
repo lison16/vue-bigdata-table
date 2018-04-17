@@ -19,8 +19,8 @@
 							@mouseup="canNotMove"
 							@mouseleave="canNotMove">
 							<th v-if="i <= fixedCol" v-for="(col, i) in columnsHandled" :data-index="i" :key="`table-title-${i}`" style="border-right: 1px solid #e9eaec;">
-								<span v-if="!col.render">{{ col.title }}</span>
-								<render-dom v-else :render="col.render" :back-value="showIndex ? (i - 1) : i"></render-dom>
+								<span v-if="!col.render">{{ col.title }}<sort-button v-if="showSortBtn(i)" :col-index="i" @on-sort="handleSort" @on-cancel-sort="handleCancelSort" :current-sort-col-index="sortedByColIndex" :current-sort-type="sortedType"></sort-button></span>
+								<render-dom v-else :render="col.render" :back-value="getComputedTableDataIndex(i)"></render-dom>
 							</th>
 						</tr>
 					</table>
@@ -35,8 +35,8 @@
 							@mouseup="canNotMove"
 							@mouseleave="canNotMove">
 							<th v-for="(col, i) in columnsHandled" :data-index="i" :key="`table-title-${i}`">
-								<span v-if="!col.render && (i > fixedCol)">{{ col.title }}</span>
-								<render-dom v-else-if="(i > fixedCol)" :render="col.render" :back-value="showIndex ? (i - 1) : i"></render-dom>
+								<span v-if="!col.render && (i > fixedCol)">{{ col.title }}<sort-button v-if="showSortBtn(i)" :col-index="i" @on-sort="handleSort" @on-cancel-sort="handleCancelSort" :current-sort-col-index="sortedByColIndex" :current-sort-type="sortedType"></sort-button></span>
+								<render-dom v-else-if="(i > fixedCol)" :render="col.render" :back-value="getComputedTableDataIndex(i)"></render-dom>
 							</th>
 						</tr>
 					</table>
@@ -52,12 +52,14 @@
 </template>
 <script>
 import renderDom from './components/renderDom';
+import sortButton from './components/sort-button.vue';
 import editRender from './components/input-render';
 import mixins from './mixins';
 export default {
 	name: 'bigdataTable',
 	components: {
-		renderDom
+		renderDom,
+		sortButton
 	},
 	mixins: [ ...mixins ],
 	props: {
@@ -224,7 +226,22 @@ export default {
 		paste: {
 			type: Boolean,
 			default: false
-		}
+		},
+		/**
+		 * @description 是否可排序
+		 */
+		sortable: {
+			type: Boolean,
+			default: false
+		},
+		/**
+		 * @description 开启排序的列序号数组或序号
+		 */
+		sortIndex: [Array, Number],
+		/**
+		 * @description 默认按指定列指定排序方式排序
+		 */
+		defaultSort: Object
 	},
 	data () {
 		return {
@@ -247,20 +264,33 @@ export default {
 		// canEdit为true时调用此方法使第row+1行第col+1列变为编辑状态，这里的行列指的是表格显示的行和除序列号列的列
 		editCell (row, col) {
 			this._editCell(row, col);
+		},
+		initSort () {
+			if (this.defaultSort) {
+				const colIndex = parseInt(Object.keys(this.defaultSort)[0]);
+				if (!(colIndex || colIndex === 0)) return;
+				const sortType = this.defaultSort[colIndex];
+				this.handleSort(colIndex, sortType);
+			}
 		}
 	},
 	watch: {
-		value () {
-			this.resize();
+		value (val) {
 			this.$nextTick(() => {
+				this.insideTableData = [...val];
+				this.initSort();
 				this._initMountedHandle();
 			});
+		},
+		insideTableData () {
+			this.resize();
 		}
 	},
 	mounted () {
-		this.resize();
 		this.$nextTick(() => {
+			this.insideTableData = [...this.value];
 			this._initMountedHandle();
+			this.resize();
 		});
 	}
 };

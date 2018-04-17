@@ -52,18 +52,6 @@ export default {
 			return this.rowHeight === undefined ? 48 : this.rowHeight;
 		},
 		colWidthArr () {
-			// let len = this.cellNum;
-			// let i = -1;
-			// let colWidthArr = [];
-			// while (++i < len) {
-			// 	if (this.columnsHandled[i].width) {
-			// 		colWidthArr.push(this.columnsHandled[i].width);
-			// 	} else {
-			// 		colWidthArr.push(this.colWidth);
-			// 	}
-			// }
-			// this.widthArr = colWidthArr;
-			// return colWidthArr;
 			let len = this.cellNum;
 			let colWidthArr = [];
 			if (this.fixedWrapperWidth) {
@@ -102,7 +90,7 @@ export default {
 					colWidthArr[noWidthCellIndexArr[w]] = noWidthCellWidth;
 					w++;
 				}
-				this.widthArr = colWidthArr;
+				// this.widthArr = colWidthArr;
 			}
 			return colWidthArr;
 		},
@@ -121,7 +109,7 @@ export default {
 				// this.tableWidth = width > this.outerWidth ? width : this.outerWidth;
 				this.tableWidth = this.fixedWrapperWidth ? this.outerWidth : (width > this.outerWidth ? width : this.outerWidth);
 				if (width < this.outerWidth) this._setColWidthArr();
-				// this.widthArr = this.colWidthArr;
+				this.widthArr = this.colWidthArr;
 			});
 		},
 		updateHeight () {
@@ -134,7 +122,7 @@ export default {
 			});
 		},
 		setComputedProps () {
-			const len = this.value.length;
+			const len = this.insideTableData.length;
 			this.totalRowHeight = len * this.itemRowHeight;
 		},
 		setIndexWidth (len) {
@@ -171,22 +159,20 @@ export default {
 			this.setTableData();
 		},
 		_initMountedHandle () {
-			if (this.indexWidth === undefined) this.indexWidthInside = this.setIndexWidth(this.value.length);
+			if (this.indexWidth === undefined) this.indexWidthInside = this.setIndexWidth(this.insideTableData.length);
 			else this.indexWidthInside = this.indexWidth;
 			this.oldTableWidth = this.colWidthArr.reduce((sum, b) => {
 				return sum + b;
 			}, 0);
 			this.widthArr = this.colWidthArr;
-			if (this.colWidth * this.columns.length + (this.showIndex ? this.indexWidthInside : 0) < this.outerWidth) this._setColWidthArr();
+			if ((this.colWidth * this.columns.length + (this.showIndex ? this.indexWidthInside : 0)) < this.outerWidth) this._setColWidthArr();
 		},
 		_setColWidthArr () {
 			let widthArr = this.widthArr.map(width => {
-				return Math.ceil(width / this.oldTableWidth * this.tableWidth);
+				return width / this.oldTableWidth * this.tableWidth;
 			});
+			this.oldTableWidth = this.tableWidth;
 			this.widthArr = widthArr;
-			this.oldTableWidth = widthArr.reduce((sum, b) => {
-				return sum + b;
-			}, 0) + 4;
 		}
 	}
 };

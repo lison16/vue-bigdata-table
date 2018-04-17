@@ -12,7 +12,9 @@ export default {
 			currentIndex: 0, // 当前展示的表格是第几个
 			itemNum: 0, // 一块数据显示的数据条数
 			timer: null,
-			scrollLeft: 0
+			scrollLeft: 0,
+			insideTableData: [],
+			initTableData: [] // 初始表格数据，用于恢复搜索和筛选
 		};
 	},
 	computed: {
@@ -40,12 +42,10 @@ export default {
 			return columns;
 		}
 	},
-	// watch: {
-	// 	currentIndex (res) {
-	// 		// this.setTopPlace();
-	// 	}
-	// },
 	methods: {
+		getComputedTableDataIndex (colIndex) {
+			return this.showIndex ? (colIndex - 1) : colIndex;
+		},
 		handleScroll (e) {
 			let ele = e.srcElement;
 			let { scrollTop, scrollLeft } = ele;
@@ -59,11 +59,11 @@ export default {
 		},
 		setTableData () {
 			let count1 = this.times0 * this.itemNum * 3;
-			this.table1Data = this.value.slice(count1, count1 + this.itemNum);
+			this.table1Data = this.insideTableData.slice(count1, count1 + this.itemNum);
 			let count2 = this.times1 * this.itemNum * 3;
-			this.table2Data = this.value.slice(count2 + this.itemNum, count2 + this.itemNum * 2);
+			this.table2Data = this.insideTableData.slice(count2 + this.itemNum, count2 + this.itemNum * 2);
 			let count3 = this.times2 * this.itemNum * 3;
-			this.table3Data = this.value.slice(count3 + this.itemNum * 2, count3 + this.itemNum * 3);
+			this.table3Data = this.insideTableData.slice(count3 + this.itemNum * 2, count3 + this.itemNum * 3);
 		},
 		getTables (h) {
 			let table1 = this.getItemTable(h, this.table1Data, 1);
@@ -90,7 +90,7 @@ export default {
 					itemData: data,
 					itemNum: this.itemNum,
 					rowStyles: this.rowStyles,
-					widthArr: this.widthArr,
+					widthArr: this.colWidthArr,
 					columns: this.columnsHandled,
 					showIndex: this.showIndex,
 					indexRender: this.indexRender,
@@ -119,7 +119,7 @@ export default {
 						this.edittingTd = `${row}-${col}`;
 					},
 					'on-success-save': ({ row, col, value }) => {
-						let data = [...this.value];
+						let data = [...this.insideTableData];
 						data[row][col] = value;
 						this.$emit('input', data);
 						this.$emit('on-success-save', { row, col, value });
@@ -133,7 +133,7 @@ export default {
 					},
 					'on-paste': (data) => {
 						if (!this.paste) return;
-						let value = [...this.value];
+						let value = [...this.insideTableData];
 						let rowLength = data.length;
 						let startSelect = this.startSelect;
 						let endSelect = this.endSelect;
@@ -179,7 +179,7 @@ export default {
 		},
 		_scrollToIndexRow (index) {
 			index = parseInt(index);
-			if (isNaN(index) || index >= this.value.length || index < 0) return;
+			if (isNaN(index) || index >= this.insideTableData.length || index < 0) return;
 			let scrollTop = index * this.itemRowHeight;
 			this.$refs.outer.scrollTop = scrollTop;
 			this.currentScrollToRowIndex = index;

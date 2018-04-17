@@ -6,7 +6,7 @@ export default {
 			canResizeCell: false,
 			initCellX: 0, // 用于计算鼠标移动的距离
 			scrollLeft: 0,
-			colIndex: 0, // 在表头上移动时鼠标坐在列的序号,
+			colIndex: 0, // 在表头上移动时鼠标所在列的序号,
 			atLeftGivenArea: false, // 是否在表头单元格指定区域(距左侧)
 			atRightGivenArea: false // 是否在表头单元格指定区域(距右侧)
 		};
@@ -14,15 +14,15 @@ export default {
 	methods: {
 		handleMousemove (e) {
 			let cell = e.srcElement.tagName.toUpperCase() === 'TH' ? e.srcElement : findNodeUpper(e.srcElement, 'th');
-			let cellDomrect = cell.getBoundingClientRect();
-			let atLeft = (e.pageX - cellDomrect.left) < (cellDomrect.width / 2);
-			let atLeftGivenArea = (cellDomrect.left + this.atLeftCellPosi) >= e.pageX;
-			let atRightGivenArea = (cellDomrect.right - e.pageX) <= this.atRightCellPosi;
+			let cellDomRect = cell.getBoundingClientRect();
+			let atLeft = (e.pageX - cellDomRect.left) < (cellDomRect.width / 2);
+			let atLeftGivenArea = (cellDomRect.left + this.atLeftCellPosi) >= e.pageX;
+			let atRightGivenArea = (cellDomRect.right - e.pageX) <= this.atRightCellPosi;
 			let cellIndex = parseInt(cell.getAttribute('data-index')); // 当前单元格的序号
 			if (atLeft && cellIndex !== 0) {
-				this.isOnCellEdge = (e.pageX - cellDomrect.left) <= 1;
+				this.isOnCellEdge = (e.pageX - cellDomRect.left) <= 1 && cellIndex - 1 !== this.fixedCol;
 			} else if (!atLeft && cellIndex !== this.cellNum - 1) {
-				this.isOnCellEdge = (cellDomrect.right - e.pageX) <= 1;
+				this.isOnCellEdge = (cellDomRect.right - e.pageX) <= 1 && cellIndex !== this.fixedCol;
 			}
 			e.atRightGivenArea = atRightGivenArea;
 			e.atLeftGivenArea = atLeftGivenArea;

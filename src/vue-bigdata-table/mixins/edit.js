@@ -25,7 +25,7 @@ export default {
 	},
 	methods: {
 		_editCell (row, col) {
-			if (!this.canEdit || row < 0 || row > this.value.length || col < 0 || col > this.columns.length || this.edittingTd === `${row}-${col}`) return;
+			if (!this.canEdit || row < 0 || row > this.insideTableData.length || col < 0 || col > this.columns.length || this.edittingTd === `${row}-${col}`) return;
 			if (parseInt(this.edittingTd.split('-')[0]) !== row) this.scrollToRow(row);
 			this.edittingTd = `${row}-${col}`;
 		},
