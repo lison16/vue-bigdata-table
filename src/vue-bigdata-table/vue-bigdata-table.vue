@@ -3,14 +3,14 @@
 </style>
 
 <template>
-	<div class="vue-bigdata-table-outer" ref="outer" @scroll="handleScroll">
+	<div class="vue-bigdata-table-outer" ref="outer" @DOMMouseScroll="handleScroll" @scroll="handleScroll">
 		<div :class="wrapperClasses" :style="tableWidthStyles">
 			<div class="vue-bigdata-table-wrapper" ref="outWrapper">
-				<div class="vue-bigdata-table-header-wrapper" :style="headerStyle">
+				<div :class="['vue-bigdata-table-header-wrapper', fixed ? 'header-wrapper-fixed' : '']" :style="headerStyle">
 					<slot name="top" :colWidthArr="widthArr"></slot>
-					<table v-if="fixedCol >= 0" :class="['vue-bigdata-table-fixed-header', showFixedBoxShadow ? 'box-shdow' : '']" cellspacing="0" cellpadding="0" border="0">
+					<table v-if="fixedCol >= 0" :class="['vue-bigdata-table-fixed-header', showFixedBoxShadow ? 'box-shadow' : '']" cellspacing="0" cellpadding="0" border="0">
 						<colgroup>
-							<col :width="width" v-for="(width, i) in widthArr" :key="'header-key-fixed-' + i" />
+							<col v-if="i <= fixedCol" :width="width" v-for="(width, i) in widthArr" :key="'header-key-fixed-' + i" />
 						</colgroup>
 						<tr
 							:style="{cursor: cursorOnHeader}"
@@ -283,6 +283,11 @@ export default {
 			});
 		},
 		insideTableData () {
+			this.resize();
+		},
+		defaultSort () {
+			this.insideTableData = [...this.value];
+			this._initMountedHandle();
 			this.resize();
 		}
 	},

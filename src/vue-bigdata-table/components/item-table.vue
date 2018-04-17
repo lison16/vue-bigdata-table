@@ -1,8 +1,9 @@
 <template>
 	<div class="vue-bigdata-table-item-table">
-		<table v-show="showTable && fixedCol >= 0" @paste="handlePaste" :class="['vue-bigdata-table-data-table', 'vue-bigdata-table-fixed-table', showFixedBoxShadow ? 'box-shdow' : '']" :style="fixedColStyles" cellspacing="0" cellpadding="0" border="0">
+		<table v-show="showTable && fixedCol >= 0" @paste="handlePaste" :class="['vue-bigdata-table-data-table', 'vue-bigdata-table-fixed-table', showFixedBoxShadow ? 'box-shadow' : '']" cellspacing="0" cellpadding="0" border="0">
 			<colgroup>
 				<col
+					v-if="i <= fixedCol"
 					:width="width" v-for="(width, i) in widthArr"
 					:key="'colgroup-fixed-' + i"
 				>
@@ -16,7 +17,7 @@
 					@click="handleClickTr(indexBase + index)"
 					@mouseenter.stop="handleMouseIn(index)"
 					@mouseleave.stop="handleMouseLeave">
-					<td v-if="showIndex" :class="['vue-bigdata-table-cell', 'vue-bigdata-table-data-table-center']" style="position: sticky;">
+					<td v-if="showIndex" :class="['vue-bigdata-table-cell', 'vue-bigdata-table-data-table-center']">
 						<render-dom :render="indexRender" :back-value="(indexBase + index)"></render-dom>
 					</td>
 					<td
@@ -141,13 +142,6 @@ export default {
 		},
 		baseIndex () {
 			return this.showIndex ? 1 : 0;
-		},
-		fixedColStyles () {
-			return {
-				position: 'sticky',
-				left: 0,
-				zIndex: 60
-			};
 		},
 		fixedColCom () {
 			return this.showIndex ? (this.fixedCol - 1) : this.fixedCol;

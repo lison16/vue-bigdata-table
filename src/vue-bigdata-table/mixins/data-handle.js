@@ -47,7 +47,7 @@ export default {
 			return this.showIndex ? (colIndex - 1) : colIndex;
 		},
 		handleScroll (e) {
-			let ele = e.srcElement;
+			let ele = e.srcElement || e.target;
 			let { scrollTop, scrollLeft } = ele;
 			this.scrollLeft = scrollLeft;
 			// let direction = (scrollTop - this.scrollTop) > 0 ? 1 : ((scrollTop - this.scrollTop) < 0 ? -1 : 0); // 1 => down  -1 => up  0 => stop

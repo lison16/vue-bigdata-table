@@ -28,7 +28,6 @@ export default {
 		},
 		headerStyle () {
 			return {
-				position: this.fixed && this.headerHeight ? 'sticky' : '',
 				height: this.headerHeight + 'px',
 				transform: 'translateX(0)'
 			};
