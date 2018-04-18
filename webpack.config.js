@@ -90,10 +90,9 @@ if (process.env.NODE_ENV === 'production') {
     new ExtractTextPlugin('./vue-bigdata-table.css', {
       allChunks: true
     }),
-    // new webpack.optimize.CommonsChunkPlugin({
-    //     async: true,
-    //     children: true,
-    //     minChunks: 1
-    // })
+    new webpack.optimize.CommonsChunkPlugin({
+        async: true,
+        children: true
+    })
   ])
 }

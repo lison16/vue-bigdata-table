@@ -1,5 +1,5 @@
 <style lang="less">
-	@import './vue-bigdata-table.less';
+	@import './styles/vue-bigdata-table.less';
 </style>
 
 <template>
@@ -273,7 +273,8 @@ export default {
 				this.handleSort(colIndex, sortType);
 			}
 		},
-    addInitRowIndexToTableData (tableData) {
+    // 给表格数据添加行号，用于排序后正确修改数据
+    setIndex (tableData) {
       return tableData.map((item, i) => {
         let row = item;
         row.initRowIndex = i;
@@ -284,24 +285,24 @@ export default {
 	watch: {
 		value (val) {
 			this.$nextTick(() => {
-				this.insideTableData = this.addInitRowIndexToTableData(this.value);
+				this.insideTableData = this.setIndex(this.value);
 				this.initSort();
-				this._initMountedHandle();
+				this._initM();
 			});
 		},
 		insideTableData () {
 			this.resize();
 		},
 		defaultSort () {
-			this.insideTableData = this.addInitRowIndexToTableData(this.value);
-			this._initMountedHandle();
+			this.insideTableData = this.setIndex(this.value);
+			this._initM();
 			this.resize();
 		}
 	},
 	mounted () {
 		this.$nextTick(() => {
-			this.insideTableData = this.addInitRowIndexToTableData(this.value);
-			this._initMountedHandle();
+			this.insideTableData = this.setIndex(this.value);
+			this._initM();
 			this.resize();
 		});
 	}

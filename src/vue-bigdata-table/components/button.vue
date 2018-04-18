@@ -18,6 +18,7 @@ export default {
 };
 </script>
 <style lang="less">
+@import '../styles/common.less';
 .v-bt-button{
   padding: 2px 7px;
   width: 20px;
@@ -29,7 +30,7 @@ export default {
   cursor: pointer;
   &:hover{
     .l{
-      background: #2d8cf0;
+      background: @basic-blue;
       transition: background .2s ease;
     }
   }

@@ -157,7 +157,7 @@ export default {
 			this.topPlaceholderHeight = parseInt(scrollTop / this.moduleHeight) * this.moduleHeight;
 			this.setTableData();
 		},
-		_initMountedHandle () {
+		_initM () {
 			if (this.indexWidth === undefined) this.indexWidthInside = this.setIndexWidth(this.insideTableData.length);
 			else this.indexWidthInside = this.indexWidth;
 			this.oldTableWidth = this.colWidthArr.reduce((sum, b) => {
