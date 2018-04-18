@@ -1,4 +1,4 @@
-import { findNodeUpper } from '../util';
+import { findNodeUpper, on, off, attr } from '../util';
 export default {
 	data () {
 		return {
@@ -30,35 +30,38 @@ export default {
 			if (parseInt(this.edittingTd.split('-')[0]) !== row) this.scrollToRow(row);
 			this.edittingTd = `${row}-${col}`;
 		},
+    getCurrentTd (e) {
+      return e.target.tagName === 'TD' ? e.target : findNodeUpper(e.target, 'td');
+    },
 		handleMousedownOnTable (e) {
 			if (e.button !== 0 || (!this.paste && !this.selectable)) return;
-			let currentTd = e.target.tagName === 'TD' ? e.target : findNodeUpper(e.target, 'td');
+			let currentTd = this.getCurrentTd(e);
 			this.selectCellsStart = {
-				row: currentTd.getAttribute('data-row'),
-				col: currentTd.getAttribute('data-col')
+				row: attr(currentTd, 'data-row'),
+				col: attr(currentTd, 'data-col')
 			};
 			this.selectCellsEnd = {
-				row: currentTd.getAttribute('data-row'),
-				col: currentTd.getAttribute('data-col')
+				row: attr(currentTd, 'data-row'),
+				col: attr(currentTd, 'data-col')
 			};
 			this.canSelectText = false;
-			document.addEventListener('mousemove', this.handleMoveOnTable);
-			document.addEventListener('mouseup', this.handleUpOnTable);
+			on(document, 'mousemove', this.handleMoveOnTable);
+			on(document, 'mouseup', this.handleUpOnTable);
 		},
 		handleMoveOnTable (e) {
 			if (!(e.target.tagName === 'TD' || findNodeUpper(e.target, 'td'))) return;
-			let currentTd = e.target.tagName === 'TD' ? e.target : findNodeUpper(e.target, 'td');
+			let currentTd = this.getCurrentTd(e);
 			this.selectCellsEnd = {
-				row: currentTd.getAttribute('data-row'),
-				col: currentTd.getAttribute('data-col')
+				row: attr(currentTd, 'data-row'),
+				col: attr(currentTd, 'data-col')
 			};
 		},
 		handleUpOnTable (e) {
 			if (!this.paste && !this.selectable) return;
 			this.canSelectText = true;
 			this.handleMoveOnTable(e);
-			document.removeEventListener('mousemove', this.handleMoveOnTable);
-			document.removeEventListener('mouseup', this.handleUpOnTable);
+			off(document, 'mousemove', this.handleMoveOnTable);
+			off(document, 'mouseup', this.handleUpOnTable);
 			this.$emit('on-select-cells', {
 				start: {
 					row: this.startSelect.row,

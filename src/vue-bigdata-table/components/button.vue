@@ -1,5 +1,5 @@
 <template>
-  <button class="vue-bigdata-table-button" @click="handleClick">
+  <button class="v-bt-button" @click="handleClick">
     <span v-if="type === 'confirm'" class="icon confirm-icon"><i class="line confirm-icon-line1 line1"></i><i class="line confirm-icon-line2 line2"></i></span>
     <span v-else class="icon cancel-icon"><i class="line cancel-icon-line1 line1"></i><i class="line cancel-icon-line2 line2"></i></span>
   </button>
@@ -18,7 +18,7 @@ export default {
 };
 </script>
 <style lang="less">
-.vue-bigdata-table-button{
+.v-bt-button{
   padding: 2px 7px;
   width: 20px;
   background: transparent;

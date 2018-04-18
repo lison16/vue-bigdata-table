@@ -1,6 +1,6 @@
 <template>
-	<div class="vue-bigdata-table-item-table">
-		<table v-show="showTable && fixedCol >= 0" @paste="handlePaste" :class="['vue-bigdata-table-data-table', 'vue-bigdata-table-fixed-table', showFixedBoxShadow ? 'box-shadow' : '']" cellspacing="0" cellpadding="0" border="0">
+	<div class="v-bt-item-table">
+		<table v-show="showTable && fixedCol >= 0" @paste="handlePaste" :class="['v-bt-data-table', 'v-bt-fixed-table', showFixedBoxShadow ? 'box-shadow' : '']" cellspacing="0" cellpadding="0" border="0">
 			<colgroup>
 				<col
 					v-if="i <= fixedCol"
@@ -17,7 +17,7 @@
 					@click="handleClickTr(indexBase + index)"
 					@mouseenter.stop="handleMouseIn(index)"
 					@mouseleave.stop="handleMouseLeave">
-					<td v-if="showIndex" :class="['vue-bigdata-table-cell', 'vue-bigdata-table-data-table-center']">
+					<td v-if="showIndex" :class="['v-bt-cell', 'v-bt-data-table-center']">
 						<render-dom :render="indexRender" :back-value="(indexBase + index)"></render-dom>
 					</td>
 					<td
@@ -27,14 +27,14 @@
 						@click="handleClickTd(indexBase + index, i)"
 						@dblclick="handleDblclickTd(indexBase + index, i, typeof td === 'object' ? td.value : td)"
 						v-for="(td, i) in tr"
-						:class="['vue-bigdata-table-cell',
+						:class="['v-bt-cell',
 											setAlign(i),
 											typeof td === 'object' ? td.className : '',
 											getSelectCellClasses(indexBase + index, i)
 										]"
 						:style="rowStyles" :key="i">
 						<template v-if="!canEdit || (canEdit && `${indexBase + index}-${i}` !== edittingTd)">
-							<div v-if="!showCellRender[showIndex ? (i + 1) : i]" class="vue-bigdata-table-cell">{{ typeof td === 'object' ? td.value : td }}</div>
+							<div v-if="!showCellRender[showIndex ? (i + 1) : i]" class="v-bt-cell">{{ typeof td === 'object' ? td.value : td }}</div>
 							<template v-else>
 								<render-dom :render="showCellRender[showIndex ? (i + 1) : i]" :back-value="{row: indexBase + index, col: i}"></render-dom>
 							</template>
@@ -44,7 +44,7 @@
 				</tr>
 			</tbody>
 		</table>
-		<table v-show="showTable" @paste="handlePaste" ref="itemTable" class="vue-bigdata-table-data-table vue-bigdata-table-content-table" :style="{position: fixedCol < 0 ? '' : 'absolute'}" cellspacing="0" cellpadding="0" border="0" width="100%">
+		<table v-show="showTable" @paste="handlePaste" ref="itemTable" class="v-bt-data-table v-bt-content-table" :style="{position: fixedCol < 0 ? '' : 'absolute'}" cellspacing="0" cellpadding="0" border="0" width="100%">
 			<colgroup>
 				<col
 					:width="width" v-for="(width, i) in widthArr"
@@ -60,7 +60,7 @@
 					@mouseleave.stop="handleMouseLeave"
 					:style="{background: currentMouseEnterIndex === index && canSelectText ? '#ebf7ff' : ''}"
 					:class="[stripe && (indexBase + index) % 2 !== 0 ? 'stripe-gray' : '', tr.className, currentScrollToRowIndex === indexBase + index ? 'scroll-to-row-tip' : '']">
-					<td v-if="showIndex" :class="['vue-bigdata-table-cell', 'vue-bigdata-table-data-table-center']">
+					<td v-if="showIndex" :class="['v-bt-cell', 'v-bt-data-table-center']">
 						<render-dom v-if="fixedCol < 0" :render="indexRender" :back-value="(indexBase + index)"></render-dom>
 					</td>
 					<td
@@ -69,7 +69,7 @@
 						:data-col="i"
 						@click="handleClickTd(indexBase + index, i)"
 						@dblclick="handleDblclickTd(indexBase + index, i, typeof td === 'object' ? td.value : td)"
-						:class="['vue-bigdata-table-cell',
+						:class="['v-bt-cell',
 											setAlign(i),
 											typeof td === 'object' ? td.className : '',
 											getSelectCellClasses(indexBase + index, i)
@@ -77,7 +77,7 @@
 						:style="rowStyles"
 						:key="i">
 						<template v-if="!canEdit || (canEdit && `${indexBase + index}-${i}` !== edittingTd)">
-							<div v-if="(!showCellRender[showIndex ? (i + 1) : i]) && (i >= fixedCol)" class="vue-bigdata-table-cell">{{ typeof td === 'object' ? td.value : td }}</div>
+							<div v-if="(!showCellRender[showIndex ? (i + 1) : i]) && (i >= fixedCol)" class="v-bt-cell">{{ typeof td === 'object' ? td.value : td }}</div>
 							<template v-else-if="i >= fixedCol">
 								<render-dom :render="showCellRender[showIndex ? (i + 1) : i]" :back-value="{row: indexBase + index, col: i}"></render-dom>
 							</template>
@@ -98,7 +98,7 @@ export default {
 	},
 	data () {
 		return {
-			prefix: 'vue-bigdata-table-data-table',
+			prefix: 'v-bt-data-table',
 			tableWidth: 0,
 			currentMouseEnterIndex: -1,
 			editInputValue: ''

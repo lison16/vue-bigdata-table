@@ -118,3 +118,19 @@ export const sortDesArr = (arr, index) => {
 		});
 	}
 };
+
+export const on = (ele, event, callback) => {
+  ele.addEventListener(event, callback);
+};
+
+export const off = (ele, event, callback) => {
+  ele.removeEventListener(event, callback);
+};
+
+export const attr = (ele, attribution, value) => {
+  if (value || value === 0) {
+    ele.setAttribute(attribution, value);
+  } else {
+    return ele.getAttribute(attribution);
+  }
+}

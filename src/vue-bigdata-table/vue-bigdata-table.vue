@@ -3,12 +3,12 @@
 </style>
 
 <template>
-	<div class="vue-bigdata-table-outer" ref="outer" @DOMMouseScroll="handleScroll" @scroll="handleScroll">
+	<div class="v-bt-outer" ref="outer" @DOMMouseScroll="handleScroll" @scroll="handleScroll">
 		<div :class="wrapperClasses" :style="tableWidthStyles">
-			<div class="vue-bigdata-table-wrapper" ref="outWrapper">
-				<div :class="['vue-bigdata-table-header-wrapper', fixed ? 'header-wrapper-fixed' : '']" :style="headerStyle">
+			<div class="v-bt-wrapper" ref="outWrapper">
+				<div :class="['v-bt-header-wrapper', fixed ? 'header-wrapper-fixed' : '']" :style="headerStyle">
 					<slot name="top" :colWidthArr="widthArr"></slot>
-					<table v-if="fixedCol >= 0" :class="['vue-bigdata-table-fixed-header', showFixedBoxShadow ? 'box-shadow' : '']" cellspacing="0" cellpadding="0" border="0">
+					<table v-if="fixedCol >= 0" :class="['v-bt-fixed-header', showFixedBoxShadow ? 'box-shadow' : '']" cellspacing="0" cellpadding="0" border="0">
 						<colgroup>
 							<col v-if="i <= fixedCol" :width="width" v-for="(width, i) in widthArr" :key="'header-key-fixed-' + i" />
 						</colgroup>
@@ -41,7 +41,7 @@
 						</tr>
 					</table>
 				</div>
-				<div :class="['vue-bigdata-table-content', canSelectText ? '' : 'noselect-text']" @mousedown="handleMousedownOnTable">
+				<div :class="['v-bt-content', canSelectText ? '' : 'noselect-text']" @mousedown="handleMousedownOnTable">
 					<div :style="{height: `${topPlaceholderHeight}px`}"></div>
 					<render-dom :render="renderTable"></render-dom>
 					<div :style="{height: `${bottomPlaceholderHeight}px`}"></div>
@@ -245,7 +245,7 @@ export default {
 	},
 	data () {
 		return {
-			prefix: 'vue-bigdata-table'
+			prefix: 'v-bt'
 		};
 	},
 	methods: {

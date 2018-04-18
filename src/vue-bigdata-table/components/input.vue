@@ -1,5 +1,5 @@
 <template>
-  <input class="vue-bigdata-table-input" :value="value" @input="handleInput" />
+  <input class="v-bt-input" :value="value" @input="handleInput" />
 </template>
 <script>
 export default {
@@ -18,7 +18,7 @@ export default {
 };
 </script>
 <style lang="less">
-.vue-bigdata-table-input{
+.v-bt-input{
   box-sizing: border-box;
   width: 100%;
   height: 32px;

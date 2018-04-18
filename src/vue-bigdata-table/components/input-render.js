@@ -25,20 +25,16 @@ export default (h, {row, col, value, beforeSave, initRowIndex}, table) => {
 				},
 				on: {
 					click () {
+            const params = {
+              row,
+              col,
+              value: table.editContent,
+              initRowIndex
+            };
 						if (beforeSave({ row, col, value, initRowIndex })) {
-							table.$emit('on-success-save', {
-								row: row,
-								col: col,
-								value: table.editContent,
-                initRowIndex: initRowIndex
-							});
+							table.$emit('on-success-save', params);
 						} else {
-							table.$emit('on-fail-save', {
-								row: row,
-								col: col,
-								value: table.editContent,
-                initRowIndex: initRowIndex
-							});
+							table.$emit('on-fail-save', params);
 						}
 					}
 				}
