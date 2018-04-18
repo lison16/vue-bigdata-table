@@ -11,6 +11,9 @@ export default {
     handleInput (e) {
       this.$emit('input', e.target.value);
     }
+  },
+  mounted () {
+    this.$emit('input', this.value);
   }
 }
 </script>

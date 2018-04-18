@@ -1,4 +1,5 @@
 import Input from './input.vue';
+import Button from './button.vue';
 export default (h, {row, col, value, beforeSave}, table) => {
 	return h('div', {
 		'class': 'edit-item-con'
@@ -17,16 +18,13 @@ export default (h, {row, col, value, beforeSave}, table) => {
 		h('div', {
 			'class': 'edit-item-btn-con'
 		}, [
-			h('button', {
+			h(Button, {
 				'class': 'edit-btn',
 				props: {
-					type: 'text',
-					icon: 'checkmark-round',
-					size: 'small'
+					type: 'confirm'
 				},
 				on: {
 					click () {
-            // console.log(value)
 						if (beforeSave({ row, col, value })) {
 							table.$emit('on-success-save', {
 								row: row,
@@ -43,12 +41,10 @@ export default (h, {row, col, value, beforeSave}, table) => {
 					}
 				}
 			}),
-			h('button', {
+			h(Button, {
 				'class': 'edit-btn',
 				props: {
-					type: 'text',
-					icon: 'close-round',
-					size: 'small'
+					type: 'cancel'
 				},
 				on: {
 					click () {
