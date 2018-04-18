@@ -1,7 +1,7 @@
 <template>
   <button class="v-bt-button" @click="handleClick">
-    <span v-if="type === 'confirm'" class="icon confirm-icon"><i class="line confirm-icon-line1 line1"></i><i class="line confirm-icon-line2 line2"></i></span>
-    <span v-else class="icon cancel-icon"><i class="line cancel-icon-line1 line1"></i><i class="line cancel-icon-line2 line2"></i></span>
+    <span v-if="type === 'confirm'" class="i con-i"><i class="l con-i-l1 l1"></i><i class="l con-i-l2 l2"></i></span>
+    <span v-else class="i can-i"><i class="l can-i-l1 l1"></i><i class="l can-i-l2 l2"></i></span>
   </button>
 </template>
 <script>
@@ -28,12 +28,12 @@ export default {
   transform: translateY(3px);
   cursor: pointer;
   &:hover{
-    .line{
+    .l{
       background: #2d8cf0;
       transition: background .2s ease;
     }
   }
-  .icon{
+  .i{
     position: relative;
     display: inline-block;
     width: 10px;
@@ -48,25 +48,25 @@ export default {
       height: 2px;
     }
   }
-  .line{
+  .l{
     transition: background .2s ease;
   }
-  .confirm-icon{
-    &-line1{
+  .con-i{
+    &-l1{
       width: 7px;
         transform: rotateZ(45deg) translate(3px, 0px);
     }
-    &-line2{
+    &-l2{
       width: 10px;
       transform: rotateZ(-45deg) translate(5px, 4px);
     }
   }
-  .cancel-icon{
-    &-line1{
+  .can-i{
+    &-l1{
       width: 12px;
       transform: rotateZ(45deg);
     }
-    &-line2{
+    &-l2{
       width: 12px;
       transform: rotateZ(-45deg);
     }

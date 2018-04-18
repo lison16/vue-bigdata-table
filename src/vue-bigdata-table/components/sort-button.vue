@@ -5,6 +5,7 @@
 	</span>
 </template>
 <script>
+import { attr } from '../util';
 export default {
 	name: 'sortButton',
 	data () {
@@ -29,7 +30,7 @@ export default {
 	},
 	methods: {
 		handleSort (e) {
-			const sortType = e.target.getAttribute('data-sort-btn');
+			const sortType = attr(e.target, 'data-sort-btn');
 			if (this.sortingType === sortType) {
 				this.sortingType = '';
 				this.$emit('on-cancel-sort');
