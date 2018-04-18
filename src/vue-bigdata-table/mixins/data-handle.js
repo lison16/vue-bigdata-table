@@ -119,6 +119,7 @@ export default {
 						this.edittingTd = `${row}-${col}`;
 					},
 					'on-success-save': ({ row, col, value }) => {
+            console.log(value)
 						let data = [...this.insideTableData];
 						data[row][col] = value;
 						this.$emit('input', data);

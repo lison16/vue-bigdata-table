@@ -1,22 +1,23 @@
+import Input from './input.vue';
 export default (h, {row, col, value, beforeSave}, table) => {
 	return h('div', {
 		'class': 'edit-item-con'
 	}, [
-		h('Input', {
+		h(Input, {
 			'class': 'edit-item-input',
 			props: {
 				value: value
 			},
 			on: {
 				input (res) {
-					value = res;
+          table.editContent = res;
 				}
 			}
 		}),
 		h('div', {
 			'class': 'edit-item-btn-con'
 		}, [
-			h('Button', {
+			h('button', {
 				'class': 'edit-btn',
 				props: {
 					type: 'text',
@@ -25,23 +26,24 @@ export default (h, {row, col, value, beforeSave}, table) => {
 				},
 				on: {
 					click () {
+            // console.log(value)
 						if (beforeSave({ row, col, value })) {
 							table.$emit('on-success-save', {
 								row: row,
 								col: col,
-								value: value
+								value: table.editContent
 							});
 						} else {
 							table.$emit('on-fail-save', {
 								row: row,
 								col: col,
-								value: value
+								value: table.editContent
 							});
 						}
 					}
 				}
 			}),
-			h('Button', {
+			h('button', {
 				'class': 'edit-btn',
 				props: {
 					type: 'text',

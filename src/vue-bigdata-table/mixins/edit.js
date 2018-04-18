@@ -3,6 +3,7 @@ export default {
 	data () {
 		return {
 			edittingTd: '', // 正在编辑的单元格的行号和列号拼接的字符串 `${row}-${col}`
+      editContent: '', // 用来保存编辑的内容
 			selectCellsStart: {}, // 编辑模式下可选中多行多列，此用来保存其实单元格行列号
 			selectCellsEnd: {},
 			selectTotalColStartIndex: -1, // 选取整列起始序列号

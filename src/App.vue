@@ -95,10 +95,10 @@ export default {
 			return (row + 1) % 2;
 		},
 		handleSuccessEdit ({ row, col, value }) {
-			this.$Message.success(`第${row + 1}行第${col + 1}列改为${value}`);
+			console.log(`第${row + 1}行第${col + 1}列改为${value}`);
 		},
 		handleFailEdit (res) {
-			this.$Message.error('偶数行不能编辑');
+			console.log('偶数行不能编辑');
 		},
 		editCell () {
 			this.$refs.table.editCell(this.editRow - 1, this.editCol - 1);
