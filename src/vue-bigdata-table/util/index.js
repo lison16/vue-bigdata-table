@@ -75,7 +75,7 @@ export const getFirstNotNullValue = (array, index) => {
 	return false;
 };
 
-const isChineseReg = new RegExp("[\\u4E00-\\u9FFF]+","g");
+const isChineseReg = new RegExp('[\\u4E00-\\u9FFF]+', 'g');
 export const sortArr = (arr, index) => {
 	if (arr.length <= 1) return;
 	const firstNotNullValue = getFirstNotNullValue(arr, index);

@@ -272,12 +272,19 @@ export default {
 				const sortType = this.defaultSort[colIndex];
 				this.handleSort(colIndex, sortType);
 			}
-		}
+		},
+    addInitRowIndexToTableData (tableData) {
+      return tableData.map((item, i) => {
+        let row = item;
+        row.initRowIndex = i;
+        return row;
+      });
+    }
 	},
 	watch: {
 		value (val) {
 			this.$nextTick(() => {
-				this.insideTableData = [...val];
+				this.insideTableData = this.addInitRowIndexToTableData(this.value);
 				this.initSort();
 				this._initMountedHandle();
 			});
@@ -286,14 +293,14 @@ export default {
 			this.resize();
 		},
 		defaultSort () {
-			this.insideTableData = [...this.value];
+			this.insideTableData = this.addInitRowIndexToTableData(this.value);
 			this._initMountedHandle();
 			this.resize();
 		}
 	},
 	mounted () {
 		this.$nextTick(() => {
-			this.insideTableData = [...this.value];
+			this.insideTableData = this.addInitRowIndexToTableData(this.value);
 			this._initMountedHandle();
 			this.resize();
 		});

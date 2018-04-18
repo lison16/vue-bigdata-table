@@ -55,7 +55,7 @@ export default {
 			this.scrollTop = scrollTop;
 			this.$nextTick(() => {
 				this.setTopPlace();
-			})
+			});
 		},
 		setTableData () {
 			let count1 = this.times0 * this.itemNum * 3;
@@ -118,23 +118,22 @@ export default {
 					'on-edit-cell': (row, col) => {
 						this.edittingTd = `${row}-${col}`;
 					},
-					'on-success-save': ({ row, col, value }) => {
-            console.log(value)
-						let data = [...this.insideTableData];
-						data[row][col] = value;
+					'on-success-save': ({ row, col, value, initRowIndex }) => {
+						let data = [...this.value];
+						data[initRowIndex][col] = value;
 						this.$emit('input', data);
-						this.$emit('on-success-save', { row, col, value });
+						this.$emit('on-success-save', { row, col, value, initRowIndex });
 						this.edittingTd = '';
 					},
-					'on-fail-save': ({ row, col, value }) => {
-						this.$emit('on-fail-save', { row, col, value });
+					'on-fail-save': ({ row, col, value, initRowIndex }) => {
+						this.$emit('on-fail-save', { row, col, value, initRowIndex });
 					},
 					'on-cancel-edit': () => {
 						this.edittingTd = '';
 					},
 					'on-paste': (data) => {
 						if (!this.paste) return;
-						let value = [...this.insideTableData];
+						let value = [...this.value];
 						let rowLength = data.length;
 						let startSelect = this.startSelect;
 						let endSelect = this.endSelect;

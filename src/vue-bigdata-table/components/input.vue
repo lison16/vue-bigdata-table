@@ -15,7 +15,7 @@ export default {
   mounted () {
     this.$emit('input', this.value);
   }
-}
+};
 </script>
 <style lang="less">
 .vue-bigdata-table-input{
@@ -43,4 +43,3 @@ export default {
   }
 }
 </style>
-

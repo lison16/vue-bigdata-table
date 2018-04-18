@@ -45,7 +45,7 @@
 </template>
 <script>
 import BigdataTable from './vue-bigdata-table';
-let wordsArr = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
+// let wordsArr = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
 
 export default {
   name: 'app',
@@ -94,8 +94,8 @@ export default {
 		beforeSave ({ row, col, value }) {
 			return (row + 1) % 2;
 		},
-		handleSuccessEdit ({ row, col, value }) {
-			console.log(`第${row + 1}行第${col + 1}列改为${value}`);
+		handleSuccessEdit ({ row, col, value, initRowIndex }) {
+			console.log(`第${initRowIndex + 1}行第${initRowIndex + 1}列改为${value}`);
 		},
 		handleFailEdit (res) {
 			console.log('偶数行不能编辑');

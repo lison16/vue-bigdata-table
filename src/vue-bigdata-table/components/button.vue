@@ -15,7 +15,7 @@ export default {
       this.$emit('click', e);
     }
   }
-}
+};
 </script>
 <style lang="less">
 .vue-bigdata-table-button{

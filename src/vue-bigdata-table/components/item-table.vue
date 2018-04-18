@@ -82,7 +82,7 @@
 								<render-dom :render="showCellRender[showIndex ? (i + 1) : i]" :back-value="{row: indexBase + index, col: i}"></render-dom>
 							</template>
 						</template>
-						<render-dom v-else :render="editCellRender" :back-value="{row: indexBase + index, col: i, value: typeof td === 'object' ? td.value : td, beforeSave}"></render-dom>
+						<render-dom v-else :render="editCellRender" :back-value="{row: indexBase + index, col: i, value: typeof td === 'object' ? td.value : td, beforeSave, initRowIndex: tr.initRowIndex}"></render-dom>
 					</td>
 				</tr>
 			</tbody>
