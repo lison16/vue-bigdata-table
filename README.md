@@ -15,9 +15,9 @@ npm run dev
 npm run bist
 ```
 
-API
+## API
 
-props:
+### props:
 
 属性  |  说明  |  类型  |  默认值
 :-------: | -------  |  :-------:  |  :-------:
@@ -48,8 +48,13 @@ sortable  |  是否可排序  |  Boolean  |  false
 sortIndex  |  开启排序的列序号数组或序号  |  Array, Number  |  -
 defaultSort  |  数据默认排序方式，是一个包含一对键值对的对象，键是要按其排序的序号，值是'up'（升序）或'down'（降序）（为方便记忆，并没有使用'asc'和'desc'）  |  Object  |  -
 
-Methods:
+### Methods:
 
-方法  |  说明  |  参数  |  默认值
+方法  |  说明  |  参数  
+:-------: | -------  |  :-------:
+resize  |  涉及到表格容器尺寸变化或数据变化的情况需要调用此方法  |  -   
+getScrollLeft  |  用于获取当前横向滚动的距离  |  -  
+scrollToRow  |  跳转到指定行号的一行，这里的行号是从0开始的  |  index  
+editCell  |  canEdit为true时调用此方法使第row+1行第col+1列变为编辑状态，这里的行列指的是表格显示的行和除序列号列的列  |  row, col
 
 For detailed explanation on how things work, consult the [docs for vue-loader](http://vuejs.github.io/vue-loader).
