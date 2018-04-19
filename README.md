@@ -48,6 +48,17 @@ sortable  |  是否可排序  |  Boolean  |  false
 sortIndex  |  开启排序的列序号数组或序号  |  Array, Number  |  -
 defaultSort  |  数据默认排序方式，是一个包含一对键值对的对象，键是要按其排序的序号，值是'up'（升序）或'down'（降序）（为方便记忆，并没有使用'asc'和'desc'）  |  Object  |  -
 
+### Event:
+
+事件名  |  说明  |  返回值  
+:-------: | -------  |  :-------:
+on-success-save  |  编辑保存成功时触发  |  row(当前行号，指当前在表格中的行号), col(列号，序列号列列号为0), value(该单元格修改后的值), initRowIndex(初始行号，即改行数据原本在数据二维数组中的索引，不受排序等影响)
+on-fail-save  |  编辑保存失败时触发  |  同on-success-save
+on-click-tr  |  点击行时触发  |  index（当前行号）
+on-click-td  |  点击单元格时触发  |  {row, col}，是个对象 
+on-moving-on-header  |  鼠标在表头移动时触发  |  鼠标事件对象，其中还添加了一些属性：colIndex(当前所在的列的索引号), atRightGivenArea(是否在当前单元格右侧atRightCellPosi指定的距离内), atLeftGivenArea(是否在当前单元格左侧atLeftCellPosi指定的距离内)
+on-click-tr  |  点击行时触发  |  index（当前行号）
+
 ### Methods:
 
 方法  |  说明  |  参数  
