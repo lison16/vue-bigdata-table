@@ -67,6 +67,3 @@ resize  |  涉及到表格容器尺寸变化或数据变化的情况需要调用
 getScrollLeft  |  用于获取当前横向滚动的距离  |  - 
 scrollToRow  |  跳转到指定行号的一行，这里的行号是从0开始的  |  index 
 editCell  |  canEdit为true时调用此方法使第row+1行第col+1列变为编辑状态，这里的行列指的是表格显示的行和除序列号列的列  |  row, col 
-
-
-For detailed explanation on how things work, consult the [docs for vue-loader](http://vuejs.github.io/vue-loader).
