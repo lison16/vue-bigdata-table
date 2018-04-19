@@ -264,23 +264,7 @@ export default {
 		// canEdit为true时调用此方法使第row+1行第col+1列变为编辑状态，这里的行列指的是表格显示的行和除序列号列的列
 		editCell (row, col) {
 			this._editCell(row, col);
-		},
-		initSort () {
-			if (this.defaultSort) {
-				const colIndex = parseInt(Object.keys(this.defaultSort)[0]);
-				if (!(colIndex || colIndex === 0)) return;
-				const sortType = this.defaultSort[colIndex];
-				this.handleSort(colIndex, sortType);
-			}
-		},
-    // 给表格数据添加行号，用于排序后正确修改数据
-    setIndex (tableData) {
-      return tableData.map((item, i) => {
-        let row = item;
-        row.initRowIndex = i;
-        return row;
-      });
-    }
+		}
 	},
 	watch: {
 		value (val) {

@@ -42,40 +42,39 @@ export default {
 			return columns;
 		}
 	},
+  watch: {
+    scrollTop (top) {
+      this.currentIndex = parseInt((top % (this.moduleHeight * 3)) / this.moduleHeight);
+      this.$nextTick(() => {
+				this.setTopPlace();
+			});
+    }
+  },
 	methods: {
 		getComputedTableDataIndex (colIndex) {
 			return this.showIndex ? (colIndex - 1) : colIndex;
 		},
 		handleScroll (e) {
-			let ele = e.srcElement || e.target;
-			let { scrollTop, scrollLeft } = ele;
+			const ele = e.srcElement || e.target;
+			const { scrollTop, scrollLeft } = ele;
 			this.scrollLeft = scrollLeft;
-			// let direction = (scrollTop - this.scrollTop) > 0 ? 1 : ((scrollTop - this.scrollTop) < 0 ? -1 : 0); // 1 => down  -1 => up  0 => stop
-			this.currentIndex = parseInt((scrollTop % (this.moduleHeight * 3)) / this.moduleHeight);
 			this.scrollTop = scrollTop;
-			this.$nextTick(() => {
-				this.setTopPlace();
-			});
 		},
 		setTableData () {
-			let count1 = this.times0 * this.itemNum * 3;
+			const count1 = this.times0 * this.itemNum * 3;
 			this.table1Data = this.insideTableData.slice(count1, count1 + this.itemNum);
-			let count2 = this.times1 * this.itemNum * 3;
+			const count2 = this.times1 * this.itemNum * 3;
 			this.table2Data = this.insideTableData.slice(count2 + this.itemNum, count2 + this.itemNum * 2);
-			let count3 = this.times2 * this.itemNum * 3;
+			const count3 = this.times2 * this.itemNum * 3;
 			this.table3Data = this.insideTableData.slice(count3 + this.itemNum * 2, count3 + this.itemNum * 3);
 		},
 		getTables (h) {
 			let table1 = this.getItemTable(h, this.table1Data, 1);
 			let table2 = this.getItemTable(h, this.table2Data, 2);
 			let table3 = this.getItemTable(h, this.table3Data, 3);
-			if (this.currentIndex === 0) {
-				return [table1, table2, table3];
-			} else if (this.currentIndex === 1) {
-				return [table2, table3, table1];
-			} else {
-				return [table3, table1, table2];
-			}
+			if (this.currentIndex === 0) return [table1, table2, table3];
+			else if (this.currentIndex === 1) return [table2, table3, table1];
+      else return [table3, table1, table2];
 		},
 		renderTable (h) {
 			return h('div', {
@@ -187,6 +186,14 @@ export default {
 			this.timer = setTimeout(() => {
 				this.currentScrollToRowIndex = -1;
 			}, 1800);
-		}
+		},
+    // 给表格数据添加行号，用于排序后正确修改数据
+    setIndex (tableData) {
+      return tableData.map((item, i) => {
+        let row = item;
+        row.initRowIndex = i;
+        return row;
+      });
+    }
 	}
 };

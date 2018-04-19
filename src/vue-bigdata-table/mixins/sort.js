@@ -27,6 +27,14 @@ export default {
 			this.sortedByColIndex = -1;
 			this.sortedType = '';
 			this.insideTableData = [...this.value];
+		},
+		initSort () {
+			if (this.defaultSort) {
+				const colIndex = parseInt(Object.keys(this.defaultSort)[0]);
+				if (!(colIndex || colIndex === 0)) return;
+				const sortType = this.defaultSort[colIndex];
+				this.handleSort(colIndex, sortType);
+			}
 		}
 	}
 };
