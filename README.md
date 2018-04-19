@@ -2,6 +2,8 @@
 
 > Powerful, table components optimized for large amounts of data, based on Vue2.0
 
+![image](https://github.com/lison16/vue-bigdata-table/raw/master/example/demo.gif)
+
 ## Build Setup
 
 ``` bash
