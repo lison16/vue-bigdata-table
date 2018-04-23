@@ -14,6 +14,9 @@ npm run dev
 # build for production with minification
 npm run bist
 ```
+## Feature
+
+采用虚拟渲染方案，解决大数据量DOM渲染性能瓶颈，原理请看文章[实战Vue百万条数据渲染表格组件开发](https://juejin.im/post/5ad876a36fb9a045df1720b9?utm_source=gold_browser_extension)
 
 ## API
 
