@@ -13,7 +13,9 @@ export default {
 			canSelectText: true, // 用于控制是否可选中表格文字
 			indexWidthInside: 0,
 			outerWidth: 0, // 外面容器宽度
-			oldTableWidth: 0 // 旧的表格宽度，用于重新计算列宽
+			oldTableWidth: 0, // 旧的表格宽度，用于重新计算列宽
+			highlightRowIndex: -1, // 高亮行号
+			updateID: 0
 		};
 	},
 	computed: {
@@ -97,6 +99,11 @@ export default {
 			return this.headerTrStyle.cursor ? this.headerTrStyle.cursor : ((this.isOnCellEdge || this.canResizeCell) ? 'col-resize' : 'default');
 		}
 	},
+	watch: {
+		highlightRow () {
+			this._clearCurrentRow();
+		}
+	},
 	methods: {
 		_tableResize () {
 			this.$nextTick(() => {
@@ -157,7 +164,7 @@ export default {
 			this.topPlaceholderHeight = parseInt(scrollTop / this.moduleHeight) * this.moduleHeight;
 			this.setTableData();
 		},
-		_initM () {
+		_initMountedHandle () {
 			if (this.indexWidth === undefined) this.indexWidthInside = this.setIndexWidth(this.insideTableData.length);
 			else this.indexWidthInside = this.indexWidth;
 			this.oldTableWidth = this.colWidthArr.reduce((sum, b) => {
@@ -172,6 +179,15 @@ export default {
 			});
 			this.oldTableWidth = this.tableWidth;
 			this.widthArr = widthArr;
+		},
+		_clearCurrentRow () {
+			this.highlightRowIndex = -1;
+		},
+		refreshHeader () {
+			this.updateID++;
+		},
+		_setHighlightRow (row) {
+			this.highlightRowIndex = row;
 		}
 	}
 };

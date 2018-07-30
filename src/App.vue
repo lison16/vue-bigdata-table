@@ -10,6 +10,7 @@
 				start-edit-type="dblclick"
 				fixed
 				stripe
+        :index-width="80"
 				:col-width="200"
 				:header-height="80"
 				:can-edit="canEdit"
@@ -17,6 +18,7 @@
 				:at-left-cell-posi="40"
 				:columns="columns"
 				:index-render="indexRender"
+				:index-render-params="indexRenderParams"
 				:fixed-col="0"
 				:sort-index="2"
 				:default-sort="defaultSort"
@@ -29,13 +31,15 @@
 				@on-moving-on-header="handleMoving"
 				@on-click-tr="handleClickTr"
 				@on-click-td="handleClickTd"
+        @on-index-change="handleClickIndex"
 			></bigdata-table>
 		</div>
+    <p style="padding-left: 100px;">你可以点击序列号试试</p>
 		<div style="padding-left: 100px">
 			<button @click="scrollRowTo(2)">跳转到第3行</button>
 			<button @click="scrollRowTo(8978)">跳转到第8979行</button>
-			<button @click="scrollRowTo(300)">跳转到第300行</button>
-			<button @click="scrollRowTo(8998)">跳转到第8998行</button>
+			<button @click="scrollRowTo(299)">跳转到第300行</button>
+			<button @click="scrollRowTo(8997)">跳转到第8998行</button>
 			<button @click="scrollRowTo(scrollIndex)">跳转到第{{ scrollIndex + 1 }}行</button>
 			<button @click="editCell">编辑第{{ editRow }}行第{{ editCol }}列</button>
 			<button @click="changeData(100)">change data</button>
@@ -45,9 +49,13 @@
 </template>
 <script>
 // let wordsArr = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
-
+import bigdataTable from './vue-bigdata-table';
+import indexRender from './index-render.js';
 export default {
   name: 'app',
+  components: {
+    bigdataTable
+  },
 	data () {
 		return {
 			tableData: [],
@@ -58,7 +66,11 @@ export default {
 			canEdit: true,
 			editRow: 1,
 			editCol: 1,
-			defaultSort: {1: 'down'}
+			defaultSort: {1: 'down'},
+      indexRender,
+      indexRenderParams: {
+				index: -1
+			}
 		};
 	},
 	watch: {
@@ -67,11 +79,6 @@ export default {
 		}
 	},
 	methods: {
-		indexRender (h, index) {
-			return h('div', {
-
-			}, index + 1);
-		},
 		handleMoving (e) {
 			// console.log(e.atGivenArea + '......' + e.colIndex)
 		},
@@ -117,7 +124,10 @@ export default {
 		},
 		changeDefaultSort () {
 			this.defaultSort = {2: 'up'};
-		}
+		},
+    handleClickIndex (index) {
+      this.indexRenderParams.index = index;
+    }
 	},
 	mounted () {
 		this.changeData(10000);
@@ -195,5 +205,43 @@ export default {
 	font-weight: 700;
 	height: 100%;
 	line-height: 48px;
+}
+.index-render-item-wrapper{
+  width: 100%;
+  height: 100%;
+  position: relative;
+  cursor: pointer;
+  .index-slide-wrapper{
+    width: 200%;
+    height: 100%;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    transform: translateX(0);
+    transition: all .2s ease;
+    &.slide-to-left{
+      transform: translateX(-50%);
+      transition: all .2s ease;
+    }
+    div{
+      float: left;
+      width: 50%;
+      height: 100%;
+    }
+    .index-render-tip-con{
+      background: #FFD0D0;
+      line-height: 46px;
+      .is-paintting-tip{
+        padding: 4px 10px;
+      }
+    }
+    .index-render-num-con{
+      & > span{
+        display: inline-block;
+        height: 100%;
+        line-height: 46px;
+      }
+    }
+  }
 }
 </style>

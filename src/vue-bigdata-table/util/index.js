@@ -75,8 +75,8 @@ export const getFirstNotNullValue = (array, index) => {
 	return false;
 };
 
-const isChineseReg = new RegExp('[\\u4E00-\\u9FFF]+', 'g');
 export const sortArr = (arr, index) => {
+	const isChineseReg = new RegExp('[\\u4E00-\\u9FFF]+', 'g');
 	if (arr.length <= 1) return;
 	const firstNotNullValue = getFirstNotNullValue(arr, index);
 	if (!firstNotNullValue && firstNotNullValue !== 0) return;
@@ -99,6 +99,7 @@ export const sortArr = (arr, index) => {
 
 // 倒序
 export const sortDesArr = (arr, index) => {
+	const isChineseReg = new RegExp('[\\u4E00-\\u9FFF]+', 'g');
 	if (arr.length <= 1) return;
 	const firstNotNullValue = getFirstNotNullValue(arr, index);
 	if (!firstNotNullValue && firstNotNullValue !== 0) return;
@@ -119,18 +120,17 @@ export const sortDesArr = (arr, index) => {
 	}
 };
 
-export const on = (ele, event, callback) => {
-  ele.addEventListener(event, callback);
+export const hasOneOf = (str, targetArr) => {
+	let len = targetArr.length;
+	let i = -1;
+	while (++i < len) {
+		if (str.indexOf(targetArr[i]) >= 0) {
+			return true;
+		}
+	}
+	return false;
 };
 
-export const off = (ele, event, callback) => {
-  ele.removeEventListener(event, callback);
-};
-
-export const attr = (ele, attribution, value) => {
-  if (value || value === 0) {
-    ele.setAttribute(attribution, value);
-  } else {
-    return ele.getAttribute(attribution);
-  }
+export const oneOf = (ele, targetArr) => {
+	return targetArr.indexOf(ele) > -1
 }

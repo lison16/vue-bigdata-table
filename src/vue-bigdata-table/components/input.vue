@@ -1,5 +1,5 @@
 <template>
-  <input class="v-bt-input" :value="value" @input="handleInput" />
+  <input class="vue-bigdata-table-input" :value="value" @input="handleInput" />
 </template>
 <script>
 export default {
@@ -18,8 +18,7 @@ export default {
 };
 </script>
 <style lang="less">
-@import '../styles/common.less';
-.v-bt-input{
+.vue-bigdata-table-input{
   box-sizing: border-box;
   width: 100%;
   height: 32px;
@@ -36,10 +35,10 @@ export default {
   outline: none;
   transition: border .2s ease-in-out,background .2s ease-in-out,box-shadow .2s ease-in-out,-webkit-box-shadow .2s ease-in-out;
   &:hover{
-    border-color: @basic-blue;
+    border-color: #57a3f3;
   }
   &:focus{
-    border-color: @basic-blue;
+    border-color: #57a3f3;
     box-shadow: 0 0 0 2px rgba(45,140,240,.2)
   }
 }

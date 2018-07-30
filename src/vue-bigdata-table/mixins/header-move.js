@@ -1,4 +1,4 @@
-import { findNodeUpper, attr } from '../util';
+import { findNodeUpper } from '../util';
 export default {
 	data () {
 		return {
@@ -13,12 +13,13 @@ export default {
 	},
 	methods: {
 		handleMousemove (e) {
-			let cell = e.srcElement.tagName.toUpperCase() === 'TH' ? e.srcElement : findNodeUpper(e.srcElement, 'th');
+			const target = e.srcElement || e.target;
+			let cell = target.tagName.toUpperCase() === 'TH' ? target : findNodeUpper(target, 'th');
 			let cellDomRect = cell.getBoundingClientRect();
 			let atLeft = (e.pageX - cellDomRect.left) < (cellDomRect.width / 2);
 			let atLeftGivenArea = (cellDomRect.left + this.atLeftCellPosi) >= e.pageX;
 			let atRightGivenArea = (cellDomRect.right - e.pageX) <= this.atRightCellPosi;
-			let cellIndex = parseInt(attr(cell, 'data-index')); // 当前单元格的序号
+			let cellIndex = parseInt(cell.getAttribute('data-index')); // 当前单元格的序号
 			if (atLeft && cellIndex !== 0) {
 				this.isOnCellEdge = (e.pageX - cellDomRect.left) <= 1 && cellIndex - 1 !== this.fixedCol;
 			} else if (!atLeft && cellIndex !== this.cellNum - 1) {

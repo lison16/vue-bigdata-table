@@ -1,7 +1,7 @@
 <template>
-  <button class="v-bt-button" @click="handleClick">
-    <span v-if="type === 'confirm'" class="i con-i"><i class="l con-i-l1 l1"></i><i class="l con-i-l2 l2"></i></span>
-    <span v-else class="i can-i"><i class="l can-i-l1 l1"></i><i class="l can-i-l2 l2"></i></span>
+  <button class="vue-bigdata-table-button" @click="handleClick">
+    <span v-if="type === 'confirm'" class="icon confirm-icon"><i class="line confirm-icon-line1 line1"></i><i class="line confirm-icon-line2 line2"></i></span>
+    <span v-else class="icon cancel-icon"><i class="line cancel-icon-line1 line1"></i><i class="line cancel-icon-line2 line2"></i></span>
   </button>
 </template>
 <script>
@@ -18,8 +18,7 @@ export default {
 };
 </script>
 <style lang="less">
-@import '../styles/common.less';
-.v-bt-button{
+.vue-bigdata-table-button{
   padding: 2px 7px;
   width: 20px;
   background: transparent;
@@ -29,12 +28,12 @@ export default {
   transform: translateY(3px);
   cursor: pointer;
   &:hover{
-    .l{
-      background: @basic-blue;
+    .line{
+      background: #2d8cf0;
       transition: background .2s ease;
     }
   }
-  .i{
+  .icon{
     position: relative;
     display: inline-block;
     width: 10px;
@@ -49,25 +48,25 @@ export default {
       height: 2px;
     }
   }
-  .l{
+  .line{
     transition: background .2s ease;
   }
-  .con-i{
-    &-l1{
+  .confirm-icon{
+    &-line1{
       width: 7px;
         transform: rotateZ(45deg) translate(3px, 0px);
     }
-    &-l2{
+    &-line2{
       width: 10px;
       transform: rotateZ(-45deg) translate(5px, 4px);
     }
   }
-  .can-i{
-    &-l1{
+  .cancel-icon{
+    &-line1{
       width: 12px;
       transform: rotateZ(45deg);
     }
-    &-l2{
+    &-line2{
       width: 12px;
       transform: rotateZ(-45deg);
     }

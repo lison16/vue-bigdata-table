@@ -1,19 +1,20 @@
 <style lang="less">
-	@import './styles/vue-bigdata-table.less';
+	@import './vue-bigdata-table.less';
 </style>
 
 <template>
-	<div class="v-bt-outer" ref="outer" @DOMMouseScroll="handleScroll" @scroll="handleScroll">
+	<div class="vue-bigdata-table-outer" ref="outer" @DOMMouseScroll="handleScroll" @scroll="handleScroll">
 		<div :class="wrapperClasses" :style="tableWidthStyles">
-			<div class="v-bt-wrapper" ref="outWrapper">
-				<div :class="['v-bt-header-wrapper', fixed ? 'header-wrapper-fixed' : '']" :style="headerStyle">
+			<div class="vue-bigdata-table-wrapper" ref="outWrapper">
+				<div :class="['vue-bigdata-table-header-wrapper', fixed ? 'header-wrapper-fixed' : '']" :style="headerStyle">
 					<slot name="top" :colWidthArr="widthArr"></slot>
-					<table v-if="fixedCol >= 0" :class="['v-bt-fixed-header', showFixedBoxShadow ? 'box-shadow' : '']" cellspacing="0" cellpadding="0" border="0">
+					<table v-if="fixedCol >= 0" :class="['vue-bigdata-table-fixed-header', showFixedBoxShadow ? 'box-shadow' : '']" cellspacing="0" cellpadding="0" border="0">
 						<colgroup>
 							<col v-if="i <= fixedCol" :width="width" v-for="(width, i) in widthArr" :key="'header-key-fixed-' + i" />
 						</colgroup>
 						<tr
 							:style="{cursor: cursorOnHeader}"
+							:data-update="updateID"
 							@mousemove.capture.prevent="handleMousemove"
 							@mousedown="handleMousedown"
 							@mouseup="canNotMove"
@@ -30,6 +31,7 @@
 						</colgroup>
 						<tr
 							:style="{cursor: cursorOnHeader}"
+							:data-update="updateID"
 							@mousemove.capture.prevent="handleMousemove"
 							@mousedown="handleMousedown"
 							@mouseup="canNotMove"
@@ -41,7 +43,7 @@
 						</tr>
 					</table>
 				</div>
-				<div :class="['v-bt-content', canSelectText ? '' : 'noselect-text']" @mousedown="handleMousedownOnTable">
+				<div class="vue-bigdata-table-content" @mousedown="handleMousedownOnTable">
 					<div :style="{height: `${topPlaceholderHeight}px`}"></div>
 					<render-dom :render="renderTable"></render-dom>
 					<div :style="{height: `${bottomPlaceholderHeight}px`}"></div>
@@ -107,13 +109,20 @@ export default {
 			default: true
 		},
 		/**
+		 * @description 点击一行是否高亮
+		 */
+		highlightRow:{
+			type: Boolean,
+			default: false
+		},
+		/**
 		 * @description 表头数组，元素为单个表头的对象，【{ title: 'xxx', render: (h) => {} }】
 		 */
 		columns: {
 			type: Array
 		},
 		/**
-		 * @description 表头高度
+		 * @description 列宽，如果单独列中指定了宽度则按单独列，如果所有宽度加起来比容器宽度小，则平分宽度，否则用colWidth
 		 */
 		colWidth: {
 			type: Number,
@@ -144,8 +153,17 @@ export default {
 		 */
 		indexRender: {
 			type: Function,
-			default: (h, index) => {
-				return h('span', index + 1);
+			default: (h, params) => {
+				return h('span', params.index + 1);
+			}
+		},
+		/**
+		 * @description indexRender的第三个参数
+		 */
+		indexRenderParams: {
+			type: Object,
+			default: () => {
+				return {};
 			}
 		},
 		/**
@@ -243,50 +261,113 @@ export default {
 		 */
 		defaultSort: Object
 	},
+	/**
+	 * Events
+	 * @on-click-tr 	des: 点击行时触发
+	 * 					arg: index: 当前行号, initRowIndex: 初始行号（排序筛选之前）
+	 * @on-click-td 	des: 点击单元格触发
+	 * 					arg: { row: 行号, col: 列号 }
+	 * @on-success-save des: 编辑成功时触发
+	 * 					arg: { row: 行号, col: 列号, value: 修改后的值, initRowIndex: 初始行号 }
+	 * @on-fail-save    des: 编辑失败时触发
+	 * 					arg: 同on-success-save
+	 * @on-paste		des: 粘贴数据成功时触发
+	 * 					des: data: 粘贴的数据的二维数组
+	 */
 	data () {
 		return {
-			prefix: 'v-bt'
+			prefix: 'vue-bigdata-table'
 		};
 	},
 	methods: {
 		// 涉及到表格容器尺寸变化或数据变化的情况调用此方法重新计算相关值
-		resize () {
-			this._tableResize();
+		resize (changeInitIndex) {
+			// this.insideTableData = [...this.value]
+			this.$nextTick(() => {
+				if (changeInitIndex) this.insideTableData = this.setInitIndex(this.value);
+				else this.insideTableData = [...this.value];
+				this.initSort();
+				// this._initMountedHandle();
+			});
+			// this._tableResize();
 		},
 		// 获取表格横向滚动的距离
 		getScrollLeft () {
 			return this.$refs.outer.scrollLeft;
 		},
 		// 调用此方法跳转到某条数据
-		scrollToRow (index) {
-			this._scrollToIndexRow(index);
+		scrollToRow (row) {
+			this._scrollToIndexRow(row);
 		},
 		// canEdit为true时调用此方法使第row+1行第col+1列变为编辑状态，这里的行列指的是表格显示的行和除序列号列的列
-		editCell (row, col) {
-			this._editCell(row, col);
+		editCell (row, col, scrollToView) {
+			this._editCell(row, col, scrollToView);
+		},
+		// canEdit为true时调用此方法使指定单元格被选中
+		selectCell (row, col) {
+			this._selectCell(row, col);
+		},
+		// 手动设置高亮行
+		setHighlightRow (row) {
+			this._setHighlightRow(row);
+		},
+		/**
+		 * @argument {Number} col 要按哪一列筛选的列号
+		 * @argument {Array} queryArr 筛选关键字数组
+		 * @description 按照某一列的指定关键词进行筛选
+		 */
+		filter (col, queryArr) {
+			this._filter(col, queryArr);
+		},
+		/**
+		 * @description 取消筛选
+		 */
+		cancelFilter () {
+			this._cancelFilter();
+		},
+		undo () {
+			this._undo();
+		},
+		/**
+		 * @description 清除高亮项目
+		 */
+		clearCurrentRow () {
+			this._clearCurrentRow();
+		},
+		/**
+		 * @description 获取指定行的初始行号
+		 */
+		getInitRowIndexByIndex (row) {
+			return this._getInitRowIndexByIndex(row);
+		},
+		/**
+		 * @description 获取指定初始行号的当前行号
+		 */
+		getIndexByInitRowIndex (initRow) {
+			return this._getIndexByInitRowIndex(initRow);
 		}
 	},
 	watch: {
-		value (val) {
+		value () {
 			this.$nextTick(() => {
-				this.insideTableData = this.setIndex(this.value);
+				this.insideTableData = this.setInitIndex(this.value);
 				this.initSort();
-				this._initM();
+				this._initMountedHandle();
 			});
 		},
 		insideTableData () {
-			this.resize();
+			this._tableResize();
 		},
 		defaultSort () {
-			this.insideTableData = this.setIndex(this.value);
-			this._initM();
+			this.insideTableData = this.setInitIndex(this.value);
+			this._initMountedHandle();
 			this.resize();
 		}
 	},
 	mounted () {
 		this.$nextTick(() => {
-			this.insideTableData = this.setIndex(this.value);
-			this._initM();
+			this.insideTableData = this.setInitIndex(this.value);
+			this._initMountedHandle();
 			this.resize();
 		});
 	}

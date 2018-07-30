@@ -14,7 +14,7 @@ export default {
 			timer: null,
 			scrollLeft: 0,
 			insideTableData: [],
-			initTableData: [] // 初始表格数据，用于恢复搜索和筛选
+			initTableData: [] // 初始表格数据，用于恢复搜索和筛选,
 		};
 	},
 	computed: {
@@ -42,39 +42,40 @@ export default {
 			return columns;
 		}
 	},
-  watch: {
-    scrollTop (top) {
-      this.currentIndex = parseInt((top % (this.moduleHeight * 3)) / this.moduleHeight);
-      this.$nextTick(() => {
-				this.setTopPlace();
-			});
-    }
-  },
 	methods: {
 		getComputedTableDataIndex (colIndex) {
 			return this.showIndex ? (colIndex - 1) : colIndex;
 		},
 		handleScroll (e) {
-			const ele = e.srcElement || e.target;
-			const { scrollTop, scrollLeft } = ele;
+			let ele = e.srcElement || e.target;
+			let { scrollTop, scrollLeft } = ele;
 			this.scrollLeft = scrollLeft;
+			// let direction = (scrollTop - this.scrollTop) > 0 ? 1 : ((scrollTop - this.scrollTop) < 0 ? -1 : 0); // 1 => down  -1 => up  0 => stop
+			this.currentIndex = parseInt((scrollTop % (this.moduleHeight * 3)) / this.moduleHeight);
 			this.scrollTop = scrollTop;
+			this.$nextTick(() => {
+				this.setTopPlace();
+			});
 		},
 		setTableData () {
-			const count1 = this.times0 * this.itemNum * 3;
+			let count1 = this.times0 * this.itemNum * 3;
 			this.table1Data = this.insideTableData.slice(count1, count1 + this.itemNum);
-			const count2 = this.times1 * this.itemNum * 3;
+			let count2 = this.times1 * this.itemNum * 3;
 			this.table2Data = this.insideTableData.slice(count2 + this.itemNum, count2 + this.itemNum * 2);
-			const count3 = this.times2 * this.itemNum * 3;
+			let count3 = this.times2 * this.itemNum * 3;
 			this.table3Data = this.insideTableData.slice(count3 + this.itemNum * 2, count3 + this.itemNum * 3);
 		},
 		getTables (h) {
 			let table1 = this.getItemTable(h, this.table1Data, 1);
 			let table2 = this.getItemTable(h, this.table2Data, 2);
 			let table3 = this.getItemTable(h, this.table3Data, 3);
-			if (this.currentIndex === 0) return [table1, table2, table3];
-			else if (this.currentIndex === 1) return [table2, table3, table1];
-      else return [table3, table1, table2];
+			if (this.currentIndex === 0) {
+				return [table1, table2, table3];
+			} else if (this.currentIndex === 1) {
+				return [table2, table3, table1];
+			} else {
+				return [table3, table1, table2];
+			}
 		},
 		renderTable (h) {
 			return h('div', {
@@ -105,23 +106,28 @@ export default {
 					canSelectText: this.canSelectText,
 					startSelect: this.startSelect,
 					endSelect: this.endSelect,
-					disabledHover: this.disabledHover
+					disabledHover: this.disabledHover,
+					highlightRow: this.highlightRow,
+					highlightRowIndex: this.highlightRowIndex,
+					indexRenderParams: this.indexRenderParams
 				},
 				on: {
-					'on-click-tr': (index) => {
-						this.$emit('on-click-tr', index);
+					'on-click-tr': (index, initRowIndex) => {
+						if (this.highlightRow) this.highlightRowIndex = index;
+						this.$emit('on-click-tr', index, initRowIndex);
 					},
 					'on-click-td': (params) => {
 						this.$emit('on-click-td', params);
 					},
 					'on-edit-cell': (row, col) => {
-						this.edittingTd = `${row}-${col}`;
+						// this.edittingTd = `${row}-${col}`;
+						this._editCell(row, col, false)
 					},
-					'on-success-save': ({ row, col, value, initRowIndex }) => {
+					'on-success-save': ({ row, col, value, initRowIndex, oldValue }) => {
 						let data = [...this.value];
-						data[initRowIndex][col] = value;
+						data[row][col] = value;
 						this.$emit('input', data);
-						this.$emit('on-success-save', { row, col, value, initRowIndex });
+						this.$emit('on-success-save', { row, col, value, initRowIndex, oldValue });
 						this.edittingTd = '';
 					},
 					'on-fail-save': ({ row, col, value, initRowIndex }) => {
@@ -187,13 +193,25 @@ export default {
 				this.currentScrollToRowIndex = -1;
 			}, 1800);
 		},
-    // 给表格数据添加行号，用于排序后正确修改数据
-    setIndex (tableData) {
-      return tableData.map((item, i) => {
-        let row = item;
-        row.initRowIndex = i;
-        return row;
-      });
-    }
+		// 给表格数据添加行号，用于排序后正确修改数据
+		setInitIndex (tableData) {
+			return tableData.map((item, i) => {
+				let row = item;
+				row.initRowIndex = i;
+				return row;
+			});
+		},
+		// 获取指定行的初始行号
+		_getInitRowIndexByIndex (index) {
+			return this.insideTableData[index].initRowIndex;
+		},
+		_getIndexByInitRowIndex (index) {
+			let i = -1;
+			let len = this.insideTableData.length;
+			while(++i < len) {
+				let row = this.insideTableData[i];
+				if (row.initRowIndex === index) return i;
+			}
+		}
 	}
 };
