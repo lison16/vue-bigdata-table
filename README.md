@@ -12,8 +12,11 @@ npm install
 npm run dev
 
 # build for production with minification
-npm run bist
+npm run dist
 ```
+## Feature
+
+采用虚拟渲染方案，解决大数据量DOM渲染性能瓶颈，原理请看文章[实战Vue百万条数据渲染表格组件开发](https://juejin.im/post/5ad876a36fb9a045df1720b9?utm_source=gold_browser_extension)
 
 ## API
 
@@ -27,7 +30,7 @@ rowHeight  |  表格行高  |  Number  |  48
 fixed  |  固定表头，设为true后表头不随表格滚动  |  Boolean  |  false
 fixedWrapperWidth  | 设为true后表格列宽总是平分容器宽度减去indexWidth后的宽度 |  Boolean  |  false
 disabledHover  |  是否取消鼠标悬浮高亮效果  |  Boolean  |  true
-columns  |  表头数组，元素为单个表头的对象，{title: 'xxx', render: (h) => {}},默认只需要title属性  |  Array  |  -
+columns  |  表头数组，元素为单个表头的对象，{title: 'xxx', render: (h) => {}, cellRender: (h, params) => {}},默认只需要title属性，render是表头渲染函数，cellRender是列单元格渲染函数  |  Array  |  -
 colWidth  |  列宽，如果单独列中指定了宽度则按单独列，如果所有宽度加起来比容器宽度小，则平分宽度，否则用colWidth  |  Number  |  100
 headerHeight  |  表头高度  |  Number  |  52
 headerTrStyle  |  表头tr样式  |  Object  |  {}
