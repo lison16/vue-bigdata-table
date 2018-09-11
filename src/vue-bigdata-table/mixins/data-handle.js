@@ -125,7 +125,7 @@ export default {
 					},
 					'on-success-save': ({ row, col, value, initRowIndex, oldValue }) => {
 						let data = [...this.value];
-						data[row][col] = value;
+						data[initRowIndex][col] = value;
 						this.$emit('input', data);
 						this.$emit('on-success-save', { row, col, value, initRowIndex, oldValue });
 						this.edittingTd = '';
