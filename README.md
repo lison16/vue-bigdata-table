@@ -30,7 +30,7 @@ rowHeight  |  表格行高  |  Number  |  48
 fixed  |  固定表头，设为true后表头不随表格滚动  |  Boolean  |  false
 fixedWrapperWidth  | 设为true后表格列宽总是平分容器宽度减去indexWidth后的宽度 |  Boolean  |  false
 disabledHover  |  是否取消鼠标悬浮高亮效果  |  Boolean  |  true
-columns  |  表头数组，元素为单个表头的对象，{title: 'xxx', render: (h) => {}, cellRender: (h, params) => {}},默认只需要title属性，render是表头渲染函数，cellRender是列单元格渲染函数  |  Array  |  -
+columns  |  表头数组，元素为单个表头的对象，{title: 'xxx', width: 该列宽度(number), render: (h) => {}, cellRender: (h, params) => {}},默认只需要title属性，render是表头渲染函数，cellRender是列单元格渲染函数  |  Array  |  -
 colWidth  |  列宽，如果单独列中指定了宽度则按单独列，如果所有宽度加起来比容器宽度小，则平分宽度，否则用colWidth  |  Number  |  100
 headerHeight  |  表头高度  |  Number  |  52
 highlightRow  |  点击一行是否高亮  |  Boolean  |  false
