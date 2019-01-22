@@ -370,6 +370,10 @@ export default {
 			this._initMountedHandle();
 			this.resize();
 		});
-	}
+		window.addEventListener('resize', this.resize)
+	},
+	beforeDestroy() {
+		window.removeEventListener('resize', this.resize)		
+	},
 };
 </script>
