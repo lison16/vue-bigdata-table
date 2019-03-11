@@ -18,6 +18,12 @@ npm run dist
 
 采用虚拟渲染方案，解决大数据量DOM渲染性能瓶颈，原理请看文章[实战Vue百万条数据渲染表格组件开发](https://juejin.im/post/5ad876a36fb9a045df1720b9?utm_source=gold_browser_extension)
 
+#### 作者系列视频课程：
+
+[Vue技术栈开发实战(26课时)](https://segmentfault.com/ls/1650000016221751?utm_source=recommend_web-live-new)
+
+[TypeScript完全解读(26课时)](https://segmentfault.com/ls/1650000018455856?utm_source=recommend_web-live-new)
+
 #### 进群和3500+前后端开发者交流学习
 
 ![image](https://image-static.segmentfault.com/387/385/3873859459-5c501e09d1d66_articlex)
