@@ -24,9 +24,9 @@ npm run dist
 
 [TypeScript完全解读(26课时)](https://segmentfault.com/ls/1650000018455856?utm_source=recommend_web-live-new)
 
-#### 进群和3500+前后端开发者交流学习
+#### 进群和4000+前后端开发者交流学习
 
-![image](https://image-static.segmentfault.com/387/385/3873859459-5c501e09d1d66_articlex)
+![image](https://github.com/lison16/v-org-tree/blob/master/group.png)
 
 ## API
 
