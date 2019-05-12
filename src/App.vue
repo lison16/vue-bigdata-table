@@ -171,7 +171,8 @@ export default {
 .wraper{
   margin: 0px auto;
   padding: 40px;
-  width: 1000px;
+	width: 66%;
+	min-width: 500px;
   height: 500px;
   overflow: auto;
 }
